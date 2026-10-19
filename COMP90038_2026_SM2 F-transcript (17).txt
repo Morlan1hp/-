@@ -1,0 +1,1397 @@
+SPEAKER 0
+All right, uh, welcome back.
+
+SPEAKER 1
+One thing that I want to remind everyone when it
+
+SPEAKER 2
+comes to AVL trees, you do not compare the balance
+
+SPEAKER 1
+factors. You compare the heights of the subtrees.
+
+SPEAKER 2
+We have done some computations of, of balance factors. We counted, oh, this was the balance factor here. There was someone, there was a balance factor here.
+
+SPEAKER 1
+It was a 0. You do not subtract balance factors, only ever subtract the
+
+SPEAKER 0
+heights, OK.
+
+SPEAKER 2
+So if you are writing some things above your notes and they are the balance factors, don't use those for
+
+SPEAKER 0
+subtraction.
+
+SPEAKER 2
+That's one thing I wanted to say.
+
+SPEAKER 1
+And then uh when we have our trees, we change the representation, right?
+
+SPEAKER 2
+So we originally our data was data that we kept
+
+SPEAKER 1
+with just standard values. If we are putting in a binary search tree, we now have some pointers. The pointers means we, we have to have a little bit more that we're storing.
+
+SPEAKER 2
+It's not just, just the data, but we also have some things that that show where things are.
+
+SPEAKER 1
+In a heap, did we need any additional pointers? I storing n values in a heap, how much memory do I need?
+
+SPEAKER 2
+I had an array of elements. I changed to a heap.
+
+SPEAKER 1
+How much new memory did I need? What's happening when we're building a heap?
+
+SPEAKER 2
+We are moving some things around.
+
+SPEAKER 1
+Am I ever allocating any memory? No, there's no new memory. Making a thing into a heap is something that is
+
+SPEAKER 2
+perfectly fine. We can do it with zero new memory.
+
+SPEAKER 1
+What about making my data into a binary search tree?
+
+SPEAKER 2
+I had an elements.
+
+SPEAKER 1
+Now I added some pointers. How many pointers did I add?
+
+SPEAKER 0
+3 3 pointers.
+
+SPEAKER 1
+OK, let's say I have 100 elements. I made it into a tree. I have some pointers that point from the root to
+
+SPEAKER 2
+something, from the dead to the left, from the right somewhere.
+
+SPEAKER 1
+Are 3 pointers enough? No. How many pointers do I have in a tree with
+
+SPEAKER 2
+100 elements in a binary search tree? 2 I hear two and that's a possible thing, right?
+
+SPEAKER 1
+From every node I point to the left or to
+
+SPEAKER 0
+the right, so alternative is every node has to be
+
+SPEAKER 1
+pointed to somehow.
+
+SPEAKER 0
+Sometimes some of the pointers are not punched, so we
+
+SPEAKER 1
+have a linear number of pointers.
+
+SPEAKER 2
+Our pointers the same size as data with something bigger, smaller. We don't know what's stored in our tree. If our tree holds, say, integers, then possibly pointers are
+
+SPEAKER 0
+bigger, but maybe some integers are bigger.
+
+SPEAKER 2
+So in any case, it is, it, it's, we are
+
+SPEAKER 1
+using some memory to put things into a, into a
+
+SPEAKER 0
+tree, uh, and then if I'm additionally wanting my tree
+
+SPEAKER 1
+to be an AVL, then I said to make my AVL checking efficient, I'm going to store the heights everywhere. If I start the heights, do I need additional memory?
+
+SPEAKER 2
+Yes, again, a linear number of memories, so we're kind
+
+SPEAKER 1
+of having the idea we're allocating a little bit more memory to be able to do things faster, and that's
+
+SPEAKER 2
+what we'll try to do later in the lecture today
+
+SPEAKER 0
+with other examples, and we've kind of already seen it
+
+SPEAKER 1
+with some algorithms, let's say sorting. We've done sorting in various ways. Heapsort was cool because it was called an in-place algorithm. We did not need more memory, but there were some algorithms, something like a MRDsort or Quicksort, where some memory was needed, and in practice they were faster.
+
+SPEAKER 0
+So that's another idea.
+
+SPEAKER 2
+Sometimes using space we can make things faster. Uh, before I continue, I hope now is the time
+
+SPEAKER 1
+that I have everyone here, so I'm going to make some announcements. First, Friday next week is a holiday, so September 25
+
+SPEAKER 0
+is a holiday.
+
+SPEAKER 2
+There is a replacement lecture already announced in the LMS
+
+SPEAKER 1
+on Wednesday. If you can make it, try to make it, uh,
+
+SPEAKER 0
+lobby theater, the 2 p.m., not very far from here. If you cannot, we'll try to record it. We hope it works out.
+
+SPEAKER 2
+The following week is the no teaching week, no lectures, no tutorials, officially no consultation hours, but I'll be there.
+
+SPEAKER 0
+So yeah, and, uh, no student hub that, that definitely doesn't happen.
+
+SPEAKER 2
+And also I, I am holding my consultation hours.
+
+SPEAKER 0
+Do make use of that first day 10:00 a.m. I have it in. Uh, Melbourne Connect and it is on Zoom and again the link is in LMS. The slides will have this information, but feel free to take photos of me.
+
+SPEAKER 2
+Uh, so, uh, that's the for the announcement part.
+
+SPEAKER 1
+So let's try to see how we can, um.
+
+SPEAKER 0
+Make more use of space to save time.
+
+SPEAKER 2
+There are sometimes using space you can make solving of
+
+SPEAKER 1
+a problem a little bit more efficient if you use your memory in a clever way. If you index your data somehow, it may work.
+
+SPEAKER 2
+And there are some very naive ways that you can
+
+SPEAKER 1
+use space, in particular, hardware already uses some space. There's a thing called a cache, right?
+
+SPEAKER 0
+You know about it. Does it do things asymptotically better?
+
+SPEAKER 1
+No, we are just able to get things from memory
+
+SPEAKER 2
+faster. It takes a long time for the processor to reach
+
+SPEAKER 0
+the memory, but if it has it in the cache, it is going to do things slightly faster.
+
+SPEAKER 2
+It's not asymptotic.
+
+SPEAKER 0
+We'll see ways how we can actually get things asymptotically better.
+
+SPEAKER 2
+Welcome back to our favorite, uh, favorite problem, the Fibonacci numbers. You remember what the Fibonacci numbers are, or maybe, I don't know if you remember, what is the N Fibonacci
+
+SPEAKER 1
+number? What is the N Fibonacci number?
+
+SPEAKER 2
+FIN is How is it related to some other numbers? It is the sum of two previous Fibonacci numbers.
+
+SPEAKER 0
+Thank you, um, and we have a naive way to
+
+SPEAKER 1
+compute the N Fibonacci number we've seen it 10 lectures
+
+SPEAKER 0
+ago. If we just call our previous, uh, numbers and they
+
+SPEAKER 2
+call the previous numbers, it's going to be inefficient. It's going to take an exponential amount of time.
+
+SPEAKER 1
+So let's try to make it slightly, um, slightly better.
+
+SPEAKER 2
+Let's try to figure out how we can do it
+
+SPEAKER 1
+faster and. We have already seen ways how we can compute the
+
+SPEAKER 2
+Fibonacci numbers slightly faster with uh with other representation.
+
+SPEAKER 1
+Let's instead try to use space to save the time. How can we use space? Well, so far our Fibonacci number just based on the
+
+SPEAKER 0
+default recurrence relation would call the previous one recursive.
+
+SPEAKER 1
+maybe we can remember something. For example, we can remember the use memory to remember
+
+SPEAKER 0
+the values of the Fibonacci function. This is going to be called tabulation, so put in
+
+SPEAKER 2
+a table the values that we have computed.
+
+SPEAKER 0
+So what is the idea when any fib is found and we can try to place it in a table,
+
+SPEAKER 2
+each call looks up this table before actually computing the
+
+SPEAKER 0
+Fibonacci number.
+
+SPEAKER 2
+Is this faster?
+
+SPEAKER 0
+Maybe, well, our previous, uh, our previous thing was exponential, so every Fibonacci call made two recursive calls.
+
+SPEAKER 1
+If I do this, is this still making recursive calls? It is still making recursive calls. Is it still exponential?
+
+SPEAKER 2
+I hear some yeses. Who thinks it's, it is exported if I'm going to
+
+SPEAKER 0
+tabulate it and uh I'm only going to make the
+
+SPEAKER 1
+computation if it's not in the table.
+
+SPEAKER 2
+Who thinks it's a yes, I'd like hands up.
+
+SPEAKER 1
+Who thinks it's a yes. Who thinks it's a no.
+
+SPEAKER 0
+OK, I have a mixture, so let's try to figure
+
+SPEAKER 2
+out what's happening.
+
+SPEAKER 1
+Every time I'm going to call my my function, it's going to in principle call the, so I call it
+
+SPEAKER 2
+for N, it's going to try to make the call
+
+SPEAKER 1
+for n minus 1 and the call for n minus 2. And all of them are in principle going to make the calls for the smaller ones, 2 more calls for the smaller 12 more calls, so it seems exponential, but the computation and the calling of the of the previous values is going to be done only if it's not yet in the table, so. How quickly am I going to put a value in the table? I put a value in the table as soon as I computed it. So as soon as I computed my FI of 3, I will never compute the FI of 3 again.
+
+SPEAKER 0
+As soon as I computed FIB of 7, I will
+
+SPEAKER 1
+never compute the FIO of 7. It will be computed only once.
+
+SPEAKER 2
+Each value will be computed only once, so the first
+
+SPEAKER 1
+call will make the recursive calls, will make the recursive calls, we'll make the recursive calls as soon as we
+
+SPEAKER 2
+compute it FIO 1, 23, and so on.
+
+SPEAKER 1
+They're all done. We will not make the remaining recursive calls, so. It in principle could be exponential if the values were not in the table, but as soon as any of the values is computed, it will not be recomputed again. So in the end we're getting a linear algorithm.
+
+SPEAKER 2
+It is kind of equivalent to the thing we've seen with just computing them bottom up, but we can express
+
+SPEAKER 1
+it in a very similar way to how the standard
+
+SPEAKER 2
+Fibonacci equation is done.
+
+SPEAKER 0
+We're just making our recursive calls and adding the checks in our table. So let's see this algorithm in detail.
+
+SPEAKER 1
+The Fibonacci numbers with tabulation. Let's assume we have a table where we're going to store our values and uh let's say that this table
+
+SPEAKER 0
+F is initially set with 0 so that we can remember 0 means we have not yet computed it some other value means we have it already.
+
+SPEAKER 1
+So how does my feedbn work? First, we need our base case in order to be
+
+SPEAKER 0
+able to stop. We need to do something when my value is 0 or 1. So if my number that I'm asking for is 0 or 1, then I immediately return the 1, and otherwise
+
+SPEAKER 1
+I'm going to check my table.
+
+SPEAKER 0
+Let's check what was in my table F at the value n. Let's call this the result.
+
+SPEAKER 2
+If my result is still a 0, then I'm going
+
+SPEAKER 1
+to make my recursive calls.
+
+SPEAKER 2
+And save the return in the table, otherwise I already
+
+SPEAKER 0
+returned the result. OK, so we're doing the computation of the previous two calls only if our table still contained a 0 and
+
+SPEAKER 2
+also only then we update our table, otherwise we return
+
+SPEAKER 0
+the thing that we stored.
+
+SPEAKER 1
+I claim this has the same complexity as lecture 6. Is this clear what's happening? When will any value in the table FN be put
+
+SPEAKER 0
+in there? So let's say I'm calling my fib of 7.
+
+SPEAKER 1
+When am I going to ever put something in the
+
+SPEAKER 2
+table? What is the first change in my table?
+
+SPEAKER 0
+No ideas and let's analyze it together. FBO 7 is going to, is it 0 or 1?
+
+SPEAKER 2
+It's not 0 or 1, so we check if there's
+
+SPEAKER 0
+something in the table, there's nothing in the table, there's
+
+SPEAKER 1
+the 0, so we're going to call fib of 6,
+
+SPEAKER 0
+and the rest comes later. OK, so fib of 7 called fib of 6. It hasn't written anything in the table yet. We're going into FIBA 6. Once again, where is the first time we're going to write something at the table?
+
+SPEAKER 2
+What does FI 6 do? It's going to in a similar way call Feeble 5. F 5 is going to call Feeble 4. Feeble 4 is going to call Feeble 3.
+
+SPEAKER 1
+Feeble 3 is going to call Feeble 2, FO 2
+
+SPEAKER 2
+is going to call.
+
+SPEAKER 1
+of 1 and fib of 0, those two actually return
+
+SPEAKER 2
+with values, so we add them. And FBI is going to put The value 2 into
+
+SPEAKER 0
+the table at position 2 that's the first one that
+
+SPEAKER 1
+we put and then it returns and now we're back
+
+SPEAKER 2
+into the FIBA 3 FIBA 3 now both of those
+
+SPEAKER 0
+are quick we write down the F of 3 we return. We have a 4 in the end this is going
+
+SPEAKER 1
+to write all the values in the bottom up order so we'll first change our table at position 2, then at 3, then at 4, and we didn't have to think how to do it bottom up. The whole remembering things in a table made it automatic.
+
+SPEAKER 0
+OK, so that that's somehow the idea, but we have
+
+SPEAKER 1
+wasted space for it. We could have done it with a bit less space.
+
+SPEAKER 0
+There's a question.
+
+SPEAKER 2
+Um Mr. Great. That OK just your is This is just pseudo code,
+
+SPEAKER 1
+but in practice, how can you realize that something belongs
+
+SPEAKER 0
+to a particular place? So we are ourselves defining what we're going to store
+
+SPEAKER 2
+where we have decided we're going to make an array,
+
+SPEAKER 1
+and we have decided we will store in the array at position.
+
+SPEAKER 2
+to the value of 2, we could have done something else. We could have decided the first one that we'll ever
+
+SPEAKER 1
+store in the array is going to be the value
+
+SPEAKER 2
+of 2, so we could have put that in the position 0. It's a slightly different both pseudocode and a practical algorithm to implement.
+
+SPEAKER 1
+It's our decision how we're going to use the memory.
+
+SPEAKER 2
+We could have used a memory in a. Different way I could have reversed my whole thing.
+
+SPEAKER 1
+It doesn't matter how I do it. It's for me to decide. The important thing is I'm going to use memory to make my algorithm run faster, so to make my pseudo
+
+SPEAKER 0
+code run faster, and it is my decision how I do this, and it's important that it works.
+
+SPEAKER 2
+Let's answer your question.
+
+SPEAKER 1
+More questions?
+
+SPEAKER 0
+OK, um, so, so we have an algorithm it seems
+
+SPEAKER 1
+to be doing things slightly better than the random one. It's not particularly exciting because we already knew how to do Fibonacci numbers relatively effectively, but, uh, we can, uh,
+
+SPEAKER 0
+we, we see the idea. Let's see another example. The example is sorting by counting.
+
+SPEAKER 2
+You've already seen so many sorting algorithms, but this one
+
+SPEAKER 1
+is going to be better than all the ones you've
+
+SPEAKER 2
+seen before.
+
+SPEAKER 1
+So imagine that you have a big array with millions of values, but all of them are just booions.
+
+SPEAKER 2
+I just have zeros and 1s, and I want to
+
+SPEAKER 1
+sort my array of zeros and 1s. Can I do something faster, right?
+
+SPEAKER 2
+I have a 00110101.
+
+SPEAKER 1
+Is there a fast way of moving all the zeros to the left and all the ones to the right?
+
+SPEAKER 0
+And the hint is in the title of the slide, the counting.
+
+SPEAKER 1
+There are some 0s, there are some 1s. So what we can do, I can just go from
+
+SPEAKER 2
+my array. I counted, I have this many zeros. I don't even have to count the 1s because I
+
+SPEAKER 0
+know the size of my arrays, the size of the array minus the number of 0s, OK, and now I
+
+SPEAKER 2
+can replace everything by this many zeros, this many 1s.
+
+SPEAKER 0
+So there's some very fast way of dealing with just zeros and 1s.
+
+SPEAKER 1
+This was a little bit naive in the sense maybe I wanted to move them in the right places, but
+
+SPEAKER 2
+we can figure this out.
+
+SPEAKER 1
+What if I have 3 kinds of keys? If I have 0s, 1s, and 2s, can I still
+
+SPEAKER 0
+do that?
+
+SPEAKER 2
+Can I count the zeros, the 1s, and the 2s? If I have 1,750s, 2,0752s, and, and the rest are
+
+SPEAKER 1
+ones, OK, I counted them and now I'm going to, to move things around. This is the idea behind sorting by counting. If you have a large array but there are relatively few keys, then. With lots of duplicate keys, there is a way to
+
+SPEAKER 0
+sort this data faster.
+
+SPEAKER 1
+For example, let's suppose all keys are single digits, so
+
+SPEAKER 0
+I have just values such as 63810, and so on. So I just have decimal digits, values between 0 and
+
+SPEAKER 2
+9.
+
+SPEAKER 1
+How can we sort this data? Well, we're going to count how many zeros there are, how many 1s, 2s, 3s, and so on, how many
+
+SPEAKER 2
+4s there are, there are no 4s in this particular
+
+SPEAKER 0
+race, but we still have to count them. We don't know. We only know that the data are digits.
+
+SPEAKER 1
+So we would like to count for every key there's some number of occurrences of the key.
+
+SPEAKER 2
+In order to do this counting.
+
+SPEAKER 1
+I do need additional memory.
+
+SPEAKER 0
+I need a, a separate array that is going to
+
+SPEAKER 2
+remember how many occurrences of each key I have.
+
+SPEAKER 0
+So yes, there's some memory I allocated.
+
+SPEAKER 1
+How long does it take me to compute the numbers of occurrences? If I want to know how many zeros there are,
+
+SPEAKER 0
+I go for my array every time I encounter a 0, I increase the appropriate place, and it's not just a 0. I go for my array every time I encounter an n in the array. I, the number of occurrences for N is increased by 1, so that, that is very quick. 1 pass through the array linear and I have created my occurrences table. Very nice.
+
+SPEAKER 2
+If I know my occurrence is stable, can I do,
+
+SPEAKER 0
+um. Can I do more with my data?
+
+SPEAKER 1
+Does it already tell me where everything goes? I have 10, 41s, 2 2s, and so on. We have the numbers of things, but I would have to move the zeros first, and I'd have to move
+
+SPEAKER 2
+the ones and so on, so there's a better way
+
+SPEAKER 1
+to deal with it, namely check where is the block
+
+SPEAKER 2
+that has all the zeros, all the ones, all the twos, and so I'm going to start.
+
+SPEAKER 0
+So rather than just knowing the numbers of occurrences, I'll
+
+SPEAKER 1
+compute where do my whole block of zeros, whole block of ones, whole block of twos, and so on go. Where do they go? Well, the block of zeros is essentially from 0 to
+
+SPEAKER 2
+1. That was clear.
+
+SPEAKER 1
+The block of 1, there were 41s. It goes after the block of zeros, so I, the
+
+SPEAKER 2
+block block of zeros has the length 1, so I
+
+SPEAKER 1
+have to add 1 to, to my thing.
+
+SPEAKER 0
+So it's shifted by 1. So I have a 4 plus.
+
+SPEAKER 2
+The 1, where does the block of 2s go? The block of 2s goes after the zeros and the
+
+SPEAKER 0
+1s, so 1 and 4 have to be added there.
+
+SPEAKER 1
+So I'm going to make my cumulative occurrences.
+
+SPEAKER 0
+So then all the 2s go, the block of 2s goes from the place 5 until 7. I'll just compute.
+
+SPEAKER 2
+My cumulative occurrences, namely what is the end of my
+
+SPEAKER 0
+uh of my block, the end of my block of 1s is a 5, the end of my block of 2s is a 7, the end of my block of 3s is 12, and so on.
+
+SPEAKER 1
+How long does it take to figure this out? What is the end of my block?
+
+SPEAKER 0
+Should be easy. I just add the previous numbers before to it, so
+
+SPEAKER 2
+again it seems like a single pass through the array,
+
+SPEAKER 1
+single pass through the array through which array.
+
+SPEAKER 2
+For the array of keys, the previous thing computing the
+
+SPEAKER 0
+occurrences was a single pass through my data.
+
+SPEAKER 2
+Now I have a single pass for the array of
+
+SPEAKER 0
+keys, and I computed my cumulative occurrences.
+
+SPEAKER 1
+Good. Now that I know what my cumulative occurrences are, I know where do blocks of each particular number go.
+
+SPEAKER 0
+Well, for 4, that's not very meaningful because there are no 4s, but that's OK.
+
+SPEAKER 1
+Now that I have this, I can try to go through my array and put all the data that I
+
+SPEAKER 2
+encounter in their right places, so I know that uh
+
+SPEAKER 0
+zeros go up to 1, the 1s go up to 5, so I, I know where they're supposed to go, and I can then adjust this to compute. So let's try to uh show this as actual code. Uh, first, We need to.
+
+SPEAKER 2
+We need to figure out uh.
+
+SPEAKER 0
+Where do particular values go, so we know that.
+
+SPEAKER 2
+We encountered some. Let's say we encountered the value 5. The last 5 goes to the place 16.
+
+SPEAKER 1
+So What I'm going to do is my result at the place 16 gets the value that was there.
+
+SPEAKER 2
+And where will the next 5 go?
+
+SPEAKER 1
+The next 5 will go to the previous place.
+
+SPEAKER 2
+The block was a length up to 16, uh, so
+
+SPEAKER 1
+now I want to put the next one at place 15 because this is what happened.
+
+SPEAKER 2
+So then I'm going to adjust my table by decreasing
+
+SPEAKER 0
+the number by 1. Right, so that that is all that happens.
+
+SPEAKER 2
+This code is really very simple.
+
+SPEAKER 0
+I now go through my array from N to 1 for each value. I put it in the new array in the right
+
+SPEAKER 2
+place immediately.
+
+SPEAKER 0
+They are actually sorted correctly. The last one goes into the last place in the block, so I'm preserving the order and additionally I can do it with one linear pass. What is the complexity of the whole sorting by counting?
+
+SPEAKER 2
+I have two values, n and k. I hear n + K.
+
+SPEAKER 0
+That's right, O N K. We passed through the data once the n to compute
+
+SPEAKER 2
+our occurrences table. We can, we compute the cumulative occurrences that took k
+
+SPEAKER 0
+steps, then n to put the data in the new
+
+SPEAKER 2
+thing appropriately.
+
+SPEAKER 1
+How much memory did I need?
+
+SPEAKER 2
+Uh We allocated an occurrenceency stable, so I needed K
+
+SPEAKER 1
+and also because our data is moving in a little
+
+SPEAKER 0
+bit weird ways we actually allocated a separate array S that's different from the array A. We cannot do it in place, but that's minor, so we actually needed the amount of memory N plus K. That is substantial but not that bad.
+
+SPEAKER 2
+And assuming that our number of keys is small, this
+
+SPEAKER 0
+works well.
+
+SPEAKER 1
+Should I not be using sorting by counting everywhere, right? It's a linear time sorting algorithm. Can I sort all my data by using sorting by counting?
+
+SPEAKER 2
+Would it not be great?
+
+SPEAKER 1
+yeah It only works if the k is sufficiently small. If I'm sorting arbitrary size integers, if my integers can
+
+SPEAKER 2
+be billions in size, then I would need to allocate
+
+SPEAKER 1
+something very big. And not only that, my algorithm has to go through this whole memory in a.
+
+SPEAKER 2
+Linear ordering for the billions just to be able to sort something small as well, so no sorting by counting
+
+SPEAKER 1
+is not the optimal sorting algorithm for everything, but it is going to be linear for many, uh, for many
+
+SPEAKER 2
+problems. So know about it, use it when it's needed.
+
+SPEAKER 0
+That's the, uh, short version.
+
+SPEAKER 2
+OK, uh, next thing, uh, so linear time sorting algorithm,
+
+SPEAKER 1
+it works when you have a small number of keys. It never compares values. So far all the sorting algorithms that we've seen before would be actually comparing our, uh, our keys, right?
+
+SPEAKER 0
+We have a key, we have another key.
+
+SPEAKER 2
+We compared them here.
+
+SPEAKER 1
+There was no comparison. How could we do sorting without comparing things?
+
+SPEAKER 2
+How can you sort without things?
+
+SPEAKER 1
+Where, where did the sorting happen? Where does any comparison things happen? When we were creating our occurrences table, the occurrences table was already assumed that all the data in the occurrences table is in their right places. We know the keys. We know there are 10 keys. We assume these are the 10 things, and they are
+
+SPEAKER 2
+in this order of 10 things.
+
+SPEAKER 1
+So we never compared a key against a key.
+
+SPEAKER 2
+We only checked which place in the occurrence table it
+
+SPEAKER 0
+goes to. So there are no key-based comparisons. This is actually very cool. With no key-base comparisons, we can compare things linearly if
+
+SPEAKER 1
+it's small. If we need to compare keys, key-base comparison sorting is
+
+SPEAKER 2
+proven to be omega of n logn.
+
+SPEAKER 0
+You cannot do sorting faster than n logn. It's actually not a very hard thing to show. Uh.
+
+SPEAKER 1
+I'll give a hint. How many, uh, if, if I have, um, lists of N elements, how many possible permutations of the lists are
+
+SPEAKER 0
+there or of an array? How many possible things to sort are there? The first one is an option. The second one N minus 1. The third one and minus 2 options.
+
+SPEAKER 1
+So how many permutations are there? Factorial, there's N factorial options. What about if I wanted to do just comparisons?
+
+SPEAKER 0
+If I were to comparen of them with each other,
+
+SPEAKER 1
+I would have 2 ton. What is the difference between 2 n and n factorial? There's no way to use n2n to to achieve n
+
+SPEAKER 2
+factorial.
+
+SPEAKER 1
+Different options so you need more than 2 to the
+
+SPEAKER 0
+end, right? Like, but that there's a little bit of math. I leave the rest to you.
+
+SPEAKER 2
+Let's continue with the next thing string matching is another
+
+SPEAKER 1
+problem where using more memory can give us faster algorithms.
+
+SPEAKER 0
+We've all been searching for things, right? Like you're in a buffer you search for for something in a text editor in natural language processing, searching for a virus web search engine we're searching for stuff and
+
+SPEAKER 1
+we've seen a brute force approach to searching for strings
+
+SPEAKER 2
+already in previous lectures, um. What is a thing we can do better?
+
+SPEAKER 1
+Usually we are searching for things in a small predetermined
+
+SPEAKER 0
+alphabet. For example, we're searching for English language strings. English language has 26 letters. Maybe we are searching for things in ASI.
+
+SPEAKER 2
+The alphabet is sufficiently small that we can do some
+
+SPEAKER 1
+preprocessing of the data that would let us search for
+
+SPEAKER 2
+a pattern faster.
+
+SPEAKER 0
+Um Let me just So consider the following we are. Searching for a string exam because that's the only thing
+
+SPEAKER 2
+the students care about what happens at the exam.
+
+SPEAKER 0
+We're searching for the, for the string in some larger. In some larger example, so what are we going to
+
+SPEAKER 2
+do?
+
+SPEAKER 0
+Let's say I'm, I'm going to first check if my
+
+SPEAKER 1
+first four characters of my whole string match the search
+
+SPEAKER 0
+pattern.
+
+SPEAKER 2
+The way I'm going to do it is I'm only going to check the last character. If the last character doesn't match, I'm, I'm not going to check the rest.
+
+SPEAKER 0
+If it matches, I'll, I'll check the rest. So let's say I'm, I'm comparing it.
+
+SPEAKER 2
+I looked.
+
+SPEAKER 1
+My string does not match already at this last position, which means I have to shift my string a little bit. So I'll now be searching for the exam one place
+
+SPEAKER 2
+later and I'll check, does it match here?
+
+SPEAKER 0
+That's the basic idea behind the brute force algorithm.
+
+SPEAKER 1
+But What happened is when I made the first comparison, I saw the string that I have actually has the character I. The I does not appear anywhere in the whole string.
+
+SPEAKER 2
+If I encounter an I, does it make sense to
+
+SPEAKER 1
+shift it by one? Is there a way that there will be an I at somewhere there?
+
+SPEAKER 2
+No, there's no way that an I could fit here. If I were to shift it here, is there a
+
+SPEAKER 1
+way that an I would, would still match? No, my search string did not contain an eye at
+
+SPEAKER 2
+all. My search string didn't contain it, so the first possible
+
+SPEAKER 1
+place where I could make sense, where it could work out would be if actually I shift my search string
+
+SPEAKER 2
+by 4 positions and then I'm going to make a
+
+SPEAKER 0
+comparison here. So that's the first, sorry, sorry, uh, here, uh, my
+
+SPEAKER 2
+first comparison was at the 4th character.
+
+SPEAKER 1
+My second comparison is at the 8th character. I see it still doesn't match.
+
+SPEAKER 2
+So now I have to shift my strength again. I'm going to shoot my string again.
+
+SPEAKER 1
+The The character that I had is an E. This is not as beautiful as it was the last
+
+SPEAKER 2
+time. Last time, the character that we had did not appear
+
+SPEAKER 1
+in the search string at all, so I could shift
+
+SPEAKER 2
+it by the whole thing.
+
+SPEAKER 1
+Now I have an E.
+
+SPEAKER 2
+He does appear.
+
+SPEAKER 1
+But it does appear only in position, well, position one, but looking from the end, it is.
+
+SPEAKER 2
+There are a few places which are not going to work. So if I were to shift it by 1, is
+
+SPEAKER 1
+there a chance it's going to match? There's no chance it's going to match because there's no
+
+SPEAKER 2
+E here, right?
+
+SPEAKER 0
+So my match already would have failed.
+
+SPEAKER 2
+My match would have failed.
+
+SPEAKER 1
+This one could in principle work because this is the last place in my search string that I had an
+
+SPEAKER 2
+E.
+
+SPEAKER 0
+My last place that I had an E in my search string was the. Third character from the end, right, we have the 0 of characters the end, the 1st, 2nd, and the 3rd, right? I'm counting from 0, I think that's how you should be counting after having become a computer scientist. Everyone counts from 0. So, uh, we have the 3rd character, so that is
+
+SPEAKER 2
+how far we can shift it, and that means the next comparison that I could actually make is here.
+
+SPEAKER 0
+So I shifted just by 3. Now I have a C.
+
+SPEAKER 1
+C does not appear in my search thing at all,
+
+SPEAKER 2
+so I don't need to do anything about the C
+
+SPEAKER 0
+at all, so I can shift my whole thing by 4 characters again now. I have an uh an A with the A what happens?
+
+SPEAKER 1
+A does appear here and it does appear in the first position, so it's not at the zero position it's
+
+SPEAKER 2
+the 1st position, which means.
+
+SPEAKER 1
+There is a chance it's going to match if I shift by 1, so I shift by 1 and then I check it.
+
+SPEAKER 2
+I check it.
+
+SPEAKER 0
+The amp works because the M worked. I check here. I checked here. I found my string, so I have made my checks at position 48, 11, then here and here, and I checked my whole string. OK, so that was the rough idea behind the horse pull, uh, search string algorithm we are comparing right to
+
+SPEAKER 2
+left and we can shift our string appropriately. What happens if we have a longer partial match?
+
+SPEAKER 0
+Let's say I have a. Text, the original text is searching and I'm looking for the birch tree, um, in my text. I have an H. That sorry, I have a C because the C is here. The C doesn't match the H. The C is at position the second to last, so I have to shift by 1.
+
+SPEAKER 2
+I shifted by 1. Now I have to again compare my pattern. The H matches the C matches. The R matches, but the A does not match, which
+
+SPEAKER 1
+means we have to shift it by something. What can we shift it by? Well, we do not know enough about.
+
+SPEAKER 2
+Rest we only know about the age.
+
+SPEAKER 0
+The age is the one that we can use to figure out how much do we shift by, so the shift is determined only by the last character in the pattern. OK, so that's what's happening. There was no other occurrence of the age. It appeared only in the last position, which means if it didn't match here, I can shift my whole five characters. OK, that is somehow uh.
+
+SPEAKER 2
+A specificity of the horse pull search string algorithm, we
+
+SPEAKER 1
+only remember what to do when we encounter these particular
+
+SPEAKER 0
+last characters. For the last character in the string, I know by how much we're going to shift. So, uh, how are we going to do this?
+
+SPEAKER 1
+We're going to try to figure out for each character how much should my shift be.
+
+SPEAKER 0
+So let's say I have my pattern that I'm searching for.
+
+SPEAKER 2
+I'm searching for B I R C H and let's say I encounter an A. The a does not appear in my text, so how
+
+SPEAKER 1
+much can I shift by? I can shift by the whole length of the pattern,
+
+SPEAKER 2
+which means I can say for a, I will always shift by 5.
+
+SPEAKER 0
+What about the bee?
+
+SPEAKER 1
+For a B, the B does appear in my pattern.
+
+SPEAKER 2
+How far does it appear?
+
+SPEAKER 1
+Well, it appears at position 012, 34 from the end, so I can if I encounter a B, I can
+
+SPEAKER 0
+always shift by 4 characters, so the shift for the B is going to be a 4. What about the C?
+
+SPEAKER 2
+C appears in the 01 position from the end, which means my shift for the character C is going to
+
+SPEAKER 0
+be a um. To be a one.
+
+SPEAKER 1
+And so on, and we can for all the characters
+
+SPEAKER 2
+that do not appear, the shift is 5. For all the characters that appear, we look at the
+
+SPEAKER 0
+appropriate occurrence and we're going to shift by this number.
+
+SPEAKER 1
+So we can build such a table and now when we are searching for the string, we just make a look up in the table and we know by how
+
+SPEAKER 2
+much we can shift. So building our shift table is quite easy.
+
+SPEAKER 0
+Let's assume the indices start from zero. I think I've been already getting used to that. We're iterating over our alphabet size because that's the size of the whole array that we need to initialize at
+
+SPEAKER 2
+the beginning, uh, we hope if it doesn't appear then
+
+SPEAKER 0
+it's fine and then we, um, so if it doesn't appear then we say we shift by the whole and.
+
+SPEAKER 1
+And then the second thing is for everything that appears in my pattern, I want the last occurrence.
+
+SPEAKER 0
+So I go through the thing in the pattern, and every time I encounter my thing, I say my shift
+
+SPEAKER 1
+for that particular letter that is in the pattern is going to be m minus the place where it occurred.
+
+SPEAKER 0
+That's the whole thing to do to build our shift table. We first initialize it with M's for the letters that do not appear and for all other ones and for all the ones that appear we go through the pattern and initialize now the. Actual algorithm for searching we call our find shifts function
+
+SPEAKER 1
+and we're going to iterate over in principle all positions so we're increasing our eye, but sometimes our I may
+
+SPEAKER 0
+be increased by a bigger search pattern.
+
+SPEAKER 2
+First we compare our word to the pattern.
+
+SPEAKER 0
+If we matched it, we're happy we. Return the start of the match.
+
+SPEAKER 1
+If we did not match it, then we can shift
+
+SPEAKER 0
+by what was in the shift table. Roughly clear. Yes.
+
+SPEAKER 2
+And What happens if our letter appears multiple times in the search pattern we then.
+
+SPEAKER 0
+Uh, so, so there's the two things.
+
+SPEAKER 1
+One, what we should do, what we should do is, in principle, it could, it could match already at the
+
+SPEAKER 2
+last occurrence. And then that's also what the algorithm does. It goes through the search pattern and it goes left to right. At the first, at the earlier occurrence, it's going to write something in the shift table, but at the next occurrence it will override that value. So in the end, when we are done for the
+
+SPEAKER 1
+2nd 4 loop, we will have written down only the last occurrences of each symbol.
+
+SPEAKER 0
+So what happens is we are if if the letter appears multiple times it's the last one that works so that's what happens in the algorithm and if you were
+
+SPEAKER 1
+to execute the algorithm yourself on paper then that's what
+
+SPEAKER 0
+you need to do you need to look up the last one. More questions? OK.
+
+SPEAKER 2
+Uh, so this is horse poll, uh.
+
+SPEAKER 1
+Algorithm one small optimization and that's a common thing that people do in practice is posting a sentinel so in not to have to always check that you are out of the string you're you can append the pattern at
+
+SPEAKER 0
+the end of the text that guarantees a match and gives us the answer well it matched at that last position. This seems to be working quite OK.
+
+SPEAKER 2
+Complexity of search of horse's algorithm.
+
+SPEAKER 1
+If we always shift by one and we always have something that goes through almost the whole string and doesn't
+
+SPEAKER 2
+match.
+
+SPEAKER 0
+Then we have the worst case complexity. It is still going to be O of M times N.
+
+SPEAKER 2
+You can try to find an example where you will
+
+SPEAKER 0
+have this, where you have these long matches that do
+
+SPEAKER 2
+not exactly work where there's like many letters but the last one does not match, many letters but the last
+
+SPEAKER 0
+one doesn't match, so something that that is in practice
+
+SPEAKER 1
+it is very fast for texts in something like the
+
+SPEAKER 0
+English language.
+
+SPEAKER 1
+There are many other search string algorithms.
+
+SPEAKER 0
+Um, the Boyer Moore algorithm is very similar with a
+
+SPEAKER 1
+slightly more sophisticated shifting strategy. So rather than always look at the last thing shift
+
+SPEAKER 0
+shift and shifting by the last one, you can do
+
+SPEAKER 2
+something slightly better and get a complexity of of of
+
+SPEAKER 0
+M+ N. I'm not presenting that here.
+
+SPEAKER 2
+You can look it up.
+
+SPEAKER 1
+Knot Morris Pratt, I'll show in a moment some intuition behind it and the Robin carb algorithm comes in the
+
+SPEAKER 2
+next lecture next week.
+
+SPEAKER 0
+OK, so what happens in uh KMP.
+
+SPEAKER 2
+Suppose we have uh so the KMP is non-examinable.
+
+SPEAKER 0
+I will not ask questions about it in the exam, but I, it's a.
+
+SPEAKER 1
+The thing that is used in practice in most solutions,
+
+SPEAKER 0
+so it's good that you know this and it's a
+
+SPEAKER 2
+good hint as to how to build algorithms so it
+
+SPEAKER 0
+it may be actually useful for things in the exam as an idea of how to build things so I do recommend looking at it as well. Suppose your algorithm is small, for example, we're looking for
+
+SPEAKER 1
+things that are in zeros and ones.
+
+SPEAKER 2
+We have a text and we have a pattern that we're searching for.
+
+SPEAKER 1
+Every time we match some zeros and 1s, we can actually not just look at a single 0 and 1
+
+SPEAKER 0
+because the shift table is going to not give us
+
+SPEAKER 2
+much. We can actually see this is the length of the
+
+SPEAKER 1
+partial match, so I can shift by a bit more. So we could try to preprocess the pattern such that at every place, no matter how many zeros and ones
+
+SPEAKER 2
+I've matched, depending on what I found, what is the
+
+SPEAKER 0
+index that I want to go to, and the way
+
+SPEAKER 2
+we're going to do this is typically with the help of a finite state automaton.
+
+SPEAKER 1
+Who here has seen the finite state automata, I'd like hands up.
+
+SPEAKER 0
+Very few, um, so a finite state automaton is going
+
+SPEAKER 2
+to be a thing which processes text where every time
+
+SPEAKER 1
+we encounter a, a symbol such as a 0 or
+
+SPEAKER 2
+a 1 we follow the edge labeled with this with
+
+SPEAKER 0
+the particular symbol. So we go here when we encounter a 0 we
+
+SPEAKER 1
+continue being here we only encounter 1, we go here,
+
+SPEAKER 2
+we encounter another 1, we go here, we encounter a
+
+SPEAKER 1
+0, we continue, and so on. And we built an automaton, so something that is going to quite well correspond to the thing that we're searching for. In a way that it's going to have these states that will say how much of the string already matches
+
+SPEAKER 2
+my state.
+
+SPEAKER 0
+So let's say I have my 101, that means three
+
+SPEAKER 2
+characters have matched my search string so far. If I encounter another 0, that means 4 of them
+
+SPEAKER 1
+will match.
+
+SPEAKER 2
+If I encounter a 1, then I go to a state where at most 1 is matching.
+
+SPEAKER 1
+But there are some places where by encountering something, I
+
+SPEAKER 2
+go to a place where a bigger thing continues.
+
+SPEAKER 1
+All this seems to be working very well in the
+
+SPEAKER 2
+sense searching for a string is, is going to be linear. We go through the automaton only once. But, uh, the complicated thing is building such an automaton, building a thing that you will know when to essentially
+
+SPEAKER 1
+when to shift by how much and how much do
+
+SPEAKER 2
+I still need to compare. So here it's only comparing things once.
+
+SPEAKER 1
+And building such a thing is not that complicated in the sense that uh well, initially you could think for every single substring with a 0 and a 1, where can I go?
+
+SPEAKER 2
+So you could try to compute it in a naive way, but there is a much better way of building
+
+SPEAKER 0
+the automaton. I'll leave the slides here, uh, but it's actually a single while loop that can be done effectively.
+
+SPEAKER 1
+Additionally, such automata can be compiled into very effective code
+
+SPEAKER 0
+if you have something that matches, you can have a sequence of ifs with go tos. Goos are ugly, but they are compiled to something quite. Effective on the processor so with additionally with the Sentinel we don't have to check for things being out of strings. So this seems to be an extremely fast way of finding strings. That's what is done in practice by the effective algorithms for doing that.
+
+SPEAKER 1
+Today I was talking about using memory to save time in various ways.
+
+SPEAKER 2
+We've related it to previous things we've seen. We've seen some kind of memorization and we'll see more
+
+SPEAKER 1
+advanced memorization later on. We've seen sorting by counting.
+
+SPEAKER 2
+That's very important. You'll need similar things later on.
+
+SPEAKER 1
+And third string we've seen horse pulls method.
+
+SPEAKER 0
+The important thing is not just how you build the
+
+SPEAKER 2
+thing, but how do the shifts happen.
+
+SPEAKER 1
+You can sometimes shift by more.
+
+SPEAKER 0
+That gives quite a nice thing.
+
+SPEAKER 2
+And next week I will start with hashing hash tables and hashing.
+
+SPEAKER 0
+Very cool.
+
+SPEAKER 2
+Thank you and see you next week.

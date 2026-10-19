@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>COMP90038 Assignment 1</title>
+<style>
+  @page { size: A4; margin: 19mm 19mm 17mm 19mm; }
+  html { font-size: 11pt; }
+  body {
+    font-family: "Cambria", "Georgia", "Times New Roman", serif;
+    line-height: 1.40; color: #000; margin: 0;
+    text-align: justify; hyphens: auto;
+  }
+  .titleblock { text-align: center; margin-bottom: 1.0em; }
+  .titleblock .uni { font-variant: small-caps; font-size: 1.0rem; letter-spacing: .02em; }
+  .titleblock h1 { font-size: 1.26rem; margin: .3em 0 .1em 0; font-weight: bold; }
+  .titleblock .sub { font-size: 1.02rem; }
+  .idline { text-align: center; margin: .6em 0 0 0; font-size: .97rem; }
+  hr.rule { border: none; border-top: .8pt solid #000; margin: .8em 0 1.1em 0; }
+  h2 { font-size: 1.1rem; margin: 1.15em 0 .35em 0; padding-bottom: .12em;
+       border-bottom: .6pt solid #999; page-break-after: avoid; }
+  h3 { font-size: 1.0rem; margin: .9em 0 .25em 0; page-break-after: avoid; }
+  p { margin: .38em 0; }
+  .marks { font-weight: normal; font-size: .87rem; color: #444; }
+  pre.algo {
+    font-family: "Cambria", "Georgia", "Times New Roman", serif;
+    font-size: .97rem; line-height: 1.32;
+    background: #fbfbfb; border: .6pt solid #bbb; border-left: 2.2pt solid #555;
+    padding: .5em .8em; margin: .5em 0 .55em 0;
+    white-space: pre; page-break-inside: avoid; text-align: left;
+  }
+  pre.algo .cmt { color: #555; font-style: italic; }
+  .eq { text-align: center; margin: .5em 0; }
+  .eqleft { margin: .45em 0 .45em 2em; text-align: left; }
+  ol.trace { margin: .35em 0 .5em 0; padding-left: 2.1em; }
+  ol.trace li { margin: .14em 0; text-align: left; }
+  ul.tight { margin: .3em 0; padding-left: 1.5em; }
+  ul.tight li { margin: .12em 0; }
+  .claim { font-style: italic; }
+  .note { font-size: .95rem; }
+  sub, sup { line-height: 0; }
+  i.v { font-style: italic; }
+  .keep { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="titleblock">
+  <div class="uni">The University of Melbourne &mdash; School of Computing and Information Systems</div>
+  <h1>COMP90038 Algorithms and Complexity</h1>
+  <div class="sub">Assignment 1 &mdash; Semester 2, 2026</div>
+</div>
+<div class="idline">Name: ________________________ &nbsp;&nbsp;&nbsp; Student ID: ________________</div>
+<hr class="rule">
+
+<h2>Problem 1 <span class="marks">[9 marks]</span></h2>
+
+<h3>(a)&nbsp;(i) <span class="marks">[2 marks]</span> &mdash; the recurrence relation</h3>
+
+<p>Let <i class="v">T</i>(<i class="v">n</i>) be the total number of operations performed by
+<i>TotalLightCount</i>(<i class="v">n</i>). The base case <i class="v">n</i>&nbsp;=&nbsp;0 performs a constant
+number of operations, say <i class="v">c</i><sub>0</sub> (one test and one return). For <i class="v">n</i>&nbsp;&gt;&nbsp;0
+the algorithm</p>
+
+<ul class="tight">
+  <li>calls <i>count</i>(<i class="v">n</i>), which is &Theta;(log <i class="v">n</i>) by assumption, i.e. it performs
+      <i class="v">c</i><sub>1</sub>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> + <i class="v">c</i><sub>2</sub>
+      operations for some constants <i class="v">c</i><sub>1</sub>&nbsp;&gt;&nbsp;0 and <i class="v">c</i><sub>2</sub>;</li>
+  <li>calls itself once, on <i class="v">n</i>&nbsp;&minus;&nbsp;1, at cost <i class="v">T</i>(<i class="v">n</i>&nbsp;&minus;&nbsp;1);</li>
+  <li>performs one addition and one return, a further constant <i class="v">c</i><sub>3</sub>.</li>
+</ul>
+
+<p>Hence, writing <i class="v">c</i> = <i class="v">c</i><sub>2</sub> + <i class="v">c</i><sub>3</sub>,</p>
+
+<div class="eq"><i class="v">T</i>(0) = <i class="v">c</i><sub>0</sub>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="v">T</i>(<i class="v">n</i>) = <i class="v">T</i>(<i class="v">n</i>&nbsp;&minus;&nbsp;1) +
+<i class="v">c</i><sub>1</sub>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> + <i class="v">c</i>
+&nbsp;&nbsp;for <i class="v">n</i> &ge; 1.</div>
+
+<p>Suppressing the constants, which do not affect the asymptotic behaviour, the recurrence is usually written</p>
+
+<div class="eq"><i class="v">T</i>(0) = &Theta;(1),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="v">T</i>(<i class="v">n</i>) = <i class="v">T</i>(<i class="v">n</i>&nbsp;&minus;&nbsp;1) +
+&Theta;(log <i class="v">n</i>) &nbsp;&nbsp;for <i class="v">n</i> &ge; 1.</div>
+
+<p>This is a decrease-by-one recursion in which the non-recursive work is logarithmic, and the argument of the
+logarithm is the <em>current</em> value of <i class="v">n</i> at each level of the recursion &mdash; that is what makes
+the analysis in (ii) more interesting than a plain &Theta;(<i class="v">n</i>) or
+&Theta;(<i class="v">n</i>&thinsp;log&thinsp;<i class="v">n</i>) guess.</p>
+
+<h3>(a)&nbsp;(ii) <span class="marks">[3 marks]</span> &mdash; the time complexity</h3>
+
+<p class="claim">Claim: <i class="v">T</i>(<i class="v">n</i>) &isin; &Theta;(<i class="v">n</i> log <i class="v">n</i>).
+This is the strongest of the three possible claims, because a &Theta; bound subsumes both an <i class="v">O</i>
+and an &Omega; bound.</p>
+
+<p><b>Solving the recurrence by backward substitution.</b></p>
+
+<div class="eqleft">
+<i class="v">T</i>(<i class="v">n</i>) = <i class="v">T</i>(<i class="v">n</i>&minus;1) +
+<i class="v">c</i><sub>1</sub>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> + <i class="v">c</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <i class="v">T</i>(<i class="v">n</i>&minus;2) +
+<i class="v">c</i><sub>1</sub>&thinsp;(log<sub>2</sub>(<i class="v">n</i>&minus;1) + log<sub>2</sub>&thinsp;<i class="v">n</i>) + 2<i class="v">c</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= &nbsp;&middot;&thinsp;&middot;&thinsp;&middot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <i class="v">T</i>(0) + <i class="v">c</i><sub>1</sub>
+&sum;<sub><i class="v">i</i>=1</sub><sup><i class="v">n</i></sup> log<sub>2</sub>&thinsp;<i class="v">i</i> +
+<i class="v">c</i>&thinsp;<i class="v">n</i>
+&nbsp;=&nbsp; <i class="v">c</i><sub>0</sub> + <i class="v">c</i><sub>1</sub>&thinsp;log<sub>2</sub>(<i class="v">n</i>!) +
+<i class="v">c</i>&thinsp;<i class="v">n</i>,
+</div>
+
+<p>where the last step uses &sum;<sub><i class="v">i</i></sub> log<sub>2</sub>&thinsp;<i class="v">i</i> =
+log<sub>2</sub>&thinsp;&prod;<sub><i class="v">i</i></sub> <i class="v">i</i> = log<sub>2</sub>(<i class="v">n</i>!).
+So, up to constants, the cost of the algorithm is the logarithm of a factorial.</p>
+
+<p><b>Upper bound.</b> Each of the <i class="v">n</i> terms of the sum is at most
+log<sub>2</sub>&thinsp;<i class="v">n</i>, so log<sub>2</sub>(<i class="v">n</i>!) &le;
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i>, and hence for every <i class="v">n</i> &ge; 2</p>
+
+<div class="eq"><i class="v">T</i>(<i class="v">n</i>) &le; <i class="v">c</i><sub>0</sub> +
+<i class="v">c</i><sub>1</sub>&thinsp;<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> +
+<i class="v">c</i>&thinsp;<i class="v">n</i> &nbsp;&le;&nbsp;
+(<i class="v">c</i><sub>0</sub> + <i class="v">c</i><sub>1</sub> + <i class="v">c</i>)&thinsp;
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i>,</div>
+
+<p>because 1 &le; <i class="v">n</i> &le; <i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> for
+<i class="v">n</i> &ge; 2. Therefore <i class="v">T</i>(<i class="v">n</i>) &isin;
+<i class="v">O</i>(<i class="v">n</i> log <i class="v">n</i>).</p>
+
+<p><b>Lower bound (using Stirling&rsquo;s formula).</b> Stirling&rsquo;s formula gives
+<i class="v">n</i>! = &radic;(2&pi;<i class="v">n</i>)&thinsp;(<i class="v">n</i>/<i class="v">e</i>)<sup><i class="v">n</i></sup>&thinsp;(1&nbsp;+&nbsp;&Theta;(1/<i class="v">n</i>)),
+so, taking base-2 logarithms,</p>
+
+<div class="eq">log<sub>2</sub>(<i class="v">n</i>!) =
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> &minus;
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">e</i> + &frac12;&thinsp;log<sub>2</sub>(2&pi;<i class="v">n</i>) +
+&Theta;(1/<i class="v">n</i>) &nbsp;&ge;&nbsp;
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> &minus;
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">e</i>.</div>
+
+<p>For <i class="v">n</i> &ge; 8 we have log<sub>2</sub>&thinsp;<i class="v">n</i> &ge; 3 &gt;
+2&thinsp;log<sub>2</sub>&thinsp;<i class="v">e</i> &asymp; 2.885, i.e.
+<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">e</i> &le;
+&frac12;&thinsp;<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i>, and so
+log<sub>2</sub>(<i class="v">n</i>!) &ge; &frac12;&thinsp;<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i>.
+Consequently</p>
+
+<div class="eq"><i class="v">T</i>(<i class="v">n</i>) &ge; <i class="v">c</i><sub>1</sub>&thinsp;log<sub>2</sub>(<i class="v">n</i>!)
+&ge; (<i class="v">c</i><sub>1</sub>/2)&thinsp;<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i>
+&nbsp;&nbsp;for all <i class="v">n</i> &ge; 8,</div>
+
+<p>that is, <i class="v">T</i>(<i class="v">n</i>) &isin; &Omega;(<i class="v">n</i> log <i class="v">n</i>).
+Together with the upper bound this yields <i class="v">T</i>(<i class="v">n</i>) &isin;
+&Theta;(<i class="v">n</i> log <i class="v">n</i>).&nbsp;&#9633;</p>
+
+<p class="note"><i>Intuition.</i> The algorithm calls <i>count</i> once for each of the <i class="v">n</i>&nbsp;+&nbsp;1 tram
+numbers, and at least half of the numbers in [0, <i class="v">n</i>] have &Theta;(log <i class="v">n</i>) bits, so a
+constant fraction of those calls really do cost &Theta;(log <i class="v">n</i>).</p>
+
+<h3>(b)&nbsp;(i) <span class="marks">[1 mark]</span> &mdash; completing the algorithm</h3>
+
+<p>The missing line is</p>
+
+<pre class="algo">        <b>return</b> 2<i>p</i> + <i>q</i>, 2<i>q</i></pre>
+
+<p>so that the complete inductive case reads:</p>
+
+<pre class="algo"><b>function</b> TotalLightCountBitsRec(<i>k</i>)
+    <b>if</b> <i>k</i> = 1 <b>then</b>
+        <b>return</b> 1, 2
+    <i>p</i>, <i>q</i> &larr; TotalLightCountBitsRec(<i>k</i> &minus; 1)
+    <b>return</b> 2<i>p</i> + <i>q</i>, 2<i>q</i></pre>
+
+<p><i>Why.</i> The bit strings of length <i class="v">k</i> are obtained by writing a 0 or a 1 in front of each bit
+string of length <i class="v">k</i>&nbsp;&minus;&nbsp;1, so there are twice as many of them:
+<i class="v">q</i> &larr; 2<i class="v">q</i>. Every (<i class="v">k</i>&minus;1)-bit string is used twice and both
+times contributes all of its own 1s, which accounts for 2<i class="v">p</i>&nbsp;of the lit lights; in addition, each
+of the <i class="v">q</i> strings that receives a leading 1 contributes exactly one further lit light. Hence
+<i class="v">p</i> &larr; 2<i class="v">p</i> + <i class="v">q</i>.</p>
+
+<p class="note">(Check: the closed forms are <i class="v">q</i><sub><i class="v">k</i></sub> = 2<sup><i class="v">k</i></sup>
+and <i class="v">p</i><sub><i class="v">k</i></sub> = <i class="v">k</i>&thinsp;&middot;&thinsp;2<sup><i class="v">k</i>&minus;1</sup>.
+For <i class="v">k</i> = 3 the numbers 0,&thinsp;&hellip;,&thinsp;7 contain
+0+1+1+2+1+2+2+3 = 12 = 3&thinsp;&middot;&thinsp;2<sup>2</sup> ones, as predicted.)</p>
+
+<h3>(b)&nbsp;(ii) <span class="marks">[1 mark]</span> &mdash; the time complexity</h3>
+
+<p class="claim"><i class="v">T</i>(<i class="v">k</i>) &isin; &Theta;(<i class="v">k</i>).</p>
+
+<p>Each invocation of <i>TotalLightCountBitsRec</i> makes exactly one recursive call, on
+<i class="v">k</i>&nbsp;&minus;&nbsp;1, and apart from that call performs only a constant number of operations (one
+test, two multiplications, one addition, one return); the base case costs a constant. So</p>
+
+<div class="eq"><i class="v">T</i>(1) = &Theta;(1),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i class="v">T</i>(<i class="v">k</i>) = <i class="v">T</i>(<i class="v">k</i>&nbsp;&minus;&nbsp;1) + &Theta;(1),</div>
+
+<p>which unwinds to <i class="v">T</i>(<i class="v">k</i>) = &Theta;(1)&thinsp;&middot;&thinsp;<i class="v">k</i> =
+&Theta;(<i class="v">k</i>). <i>TotalLightCountBits</i> merely adds one call and a constant amount of work
+(discarding <i class="v">q</i>), so it is &Theta;(<i class="v">k</i>) as well. The bound is &Theta; rather than just
+<i class="v">O</i> because exactly <i class="v">k</i> calls are made on every input &mdash; no more and no fewer &mdash;
+so the running time is bounded below by a constant multiple of <i class="v">k</i> too. (As usual we assume that an
+arithmetic operation takes constant time.)</p>
+
+<h3>(b)&nbsp;(iii) <span class="marks">[2 marks]</span> &mdash; which algorithm is more efficient?</h3>
+
+<p class="claim"><i>TotalLightCountBits</i> is more efficient, by an exponential margin:
+&Theta;(log <i class="v">n</i>) against &Theta;(<i class="v">n</i> log <i class="v">n</i>).</p>
+
+<p>Let <i class="v">n</i> = 2<sup><i class="v">k</i></sup>, so <i class="v">k</i> = log<sub>2</sub>&thinsp;<i class="v">n</i>.
+The integers representable with <i class="v">k</i> bits are exactly 0,&thinsp;&hellip;,&thinsp;2<sup><i class="v">k</i></sup>&minus;1
+= 0,&thinsp;&hellip;,&thinsp;<i class="v">n</i>&minus;1, i.e. all the tram numbers except <i class="v">n</i> itself; and
+<i class="v">n</i> = 2<sup><i class="v">k</i></sup> has exactly one light on. So the answer to the problem of part&nbsp;(a) is</p>
+
+<div class="eq"><i>TotalLightCountBits</i>(log<sub>2</sub>&thinsp;<i class="v">n</i>) + 1.</div>
+
+<p>Its cost is &Theta;(log <i class="v">n</i>) to obtain the binary representation of <i class="v">n</i> (which is what
+supplies <i class="v">k</i>, the number of bits), plus &Theta;(<i class="v">k</i>) =
+&Theta;(log <i class="v">n</i>) for the recursion by (b)(ii), plus &Theta;(1) for the final increment: in total
+&Theta;(log <i class="v">n</i>). By (a)(ii), <i>TotalLightCount</i> needs
+&Theta;(<i class="v">n</i> log <i class="v">n</i>) for the same answer, so it is slower by a factor of
+&Theta;(<i class="v">n</i>).</p>
+
+<p>The reason is that <i>TotalLightCount</i> re-counts the bits of every single tram number, whereas
+<i>TotalLightCountBits</i> handles a whole block of 2<sup><i class="v">k</i>&minus;1</sup> numbers in one step, by
+exploiting the fact that the <i class="v">k</i>-bit numbers are two copies of the
+(<i class="v">k</i>&minus;1)-bit numbers.</p>
+
+<p class="note">(Check: for <i class="v">n</i> = 2<sup><i class="v">k</i></sup> the value returned is
+<i class="v">k</i>&thinsp;&middot;&thinsp;2<sup><i class="v">k</i>&minus;1</sup> + 1 =
+&frac12;&thinsp;<i class="v">n</i>&thinsp;log<sub>2</sub>&thinsp;<i class="v">n</i> + 1. For
+<i class="v">n</i> = 4 this is 5, matching 0,&nbsp;1,&nbsp;1,&nbsp;2,&nbsp;1 lit lights for the trams 0&ndash;4.)</p>
+
+<h2>Problem 2 <span class="marks">[8 marks]</span></h2>
+
+<h3>(a) <span class="marks">[3 marks]</span> &mdash; a counterexample and its trace</h3>
+
+<p><b>(i) Counterexample.</b> Take</p>
+
+<div class="eq"><i>arr</i> = [1, 1] &nbsp;&nbsp;and&nbsp;&nbsp; <i>start</i> = 0.</div>
+
+<p><i>Specified behaviour.</i> No entry of <i>arr</i> is 0, so the network has no terminal stop, no sequence of moves
+can reach one, the configuration is invalid, and the procedure must return <b>False</b>.</p>
+
+<p><i>Actual behaviour.</i> <i>IsValid_AI</i> does not terminate: it recurses forever (in practice it crashes with a
+stack overflow), so it never returns <b>False</b> &mdash; it returns nothing at all.</p>
+
+<p><b>(ii) Trace.</b> The disjunction <b>or</b> is evaluated from left to right, so the call
+<i>IsValid_AI</i>(<i>arr</i>, <i>i</i>&nbsp;+&nbsp;<i>dist</i>) is made first.</p>
+
+<ol class="trace">
+  <li><i>IsValid_AI</i>([1,1], 0): <i>i</i> = 0; 0 &le; <i>i</i> &lt; 2, so no return yet; <i>arr</i>[0] = 1 &ne; 0;
+      <i>dist</i> &larr; 1; evaluate the first disjunct, i.e. call &hellip;</li>
+  <li><i>IsValid_AI</i>([1,1], 1): <i>i</i> = 1; 0 &le; <i>i</i> &lt; 2; <i>arr</i>[1] = 1 &ne; 0;
+      <i>dist</i> &larr; 1; evaluate the first disjunct, i.e. call &hellip;</li>
+  <li><i>IsValid_AI</i>([1,1], 2): <i>i</i> = 2 &ge; <i>length</i>(<i>arr</i>) = 2, so <b>return False</b>.</li>
+  <li>Back in call&nbsp;2: the first disjunct is <b>False</b>, so evaluate the second one, i.e. call &hellip;</li>
+  <li><i>IsValid_AI</i>([1,1], 0): identical to call&nbsp;1; <i>dist</i> &larr; 1; evaluate the first disjunct &hellip;</li>
+  <li><i>IsValid_AI</i>([1,1], 1): identical to call&nbsp;2; evaluate the first disjunct &hellip;</li>
+  <li><i>IsValid_AI</i>([1,1], 2): <b>return False</b>.</li>
+  <li>Back in call&nbsp;6: evaluate the second disjunct, i.e. call <i>IsValid_AI</i>([1,1], 0) &mdash;
+      and the whole pattern starts again.</li>
+</ol>
+
+<p>Calls&nbsp;5&ndash;8 repeat calls&nbsp;1&ndash;4 with exactly the same arguments, so the sequence of calls
+0,&nbsp;1,&nbsp;2,&nbsp;0,&nbsp;1,&nbsp;2,&nbsp;&hellip; continues forever and the top-level call never returns.</p>
+
+<p><b>What goes wrong.</b> The tram can oscillate 0&nbsp;&rarr;&nbsp;1&nbsp;&rarr;&nbsp;0&nbsp;&rarr;&nbsp;1&nbsp;&rarr;&nbsp;&hellip;.
+<i>IsValid_AI</i> keeps no record of which stops it has already examined, so it re-explores a state it has already
+been in, and the recursion has no way of bottoming out. The evaluation order of <b>or</b> is irrelevant here: the other
+disjunct of call&nbsp;1 is <i>IsValid_AI</i>([1,1],&nbsp;&minus;1), which returns <b>False</b> at once, so whichever
+disjunct is attempted first the cycle is still entered.</p>
+
+<p class="note"><i>Remark (not part of the counterexample).</i> The same defect can also stop the algorithm from
+recognising a <em>valid</em> configuration: for <i>arr</i> = [0,&nbsp;1,&nbsp;1,&nbsp;1] and <i>start</i> = 2 the
+specification demands <b>True</b> (the route 2&nbsp;&rarr;&nbsp;1&nbsp;&rarr;&nbsp;0 ends at the terminal stop 0), but the
+calls 2,&nbsp;3,&nbsp;2,&nbsp;3,&nbsp;&hellip; loop forever before the backward move from stop&nbsp;2 to stop&nbsp;1 is ever tried.</p>
+
+<h3 id="p2b">(b) <span class="marks">[4 marks]</span> &mdash; a correct algorithm</h3>
+
+<p>The stops form a directed graph on <i class="v">n</i> vertices in which stop <i class="v">i</i> has at most the two
+out-neighbours <i class="v">i</i>&nbsp;+&nbsp;<i>arr</i>[<i class="v">i</i>] and
+<i class="v">i</i>&nbsp;&minus;&nbsp;<i>arr</i>[<i class="v">i</i>] (only those that stay on the track). The question is
+whether a stop holding&nbsp;0 is reachable from <i>start</i>, so we perform a depth-first search and, crucially, mark the
+stops already visited &mdash; which is precisely what <i>IsValid_AI</i> omits.</p>
+
+<pre class="algo"><b>function</b> IsValid(<i>arr</i>, <i>start</i>)
+    <i>n</i> &larr; length(<i>arr</i>)
+    <b>if</b> <i>start</i> &lt; 0 <b>or</b> <i>start</i> &ge; <i>n</i> <b>then</b>
+        <b>return</b> False
+    <i>visited</i> &larr; <b>new</b> Boolean array with indices 0 &hellip; <i>n</i> &minus; 1
+    <b>for</b> <i>i</i> &larr; 0 <b>to</b> <i>n</i> &minus; 1 <b>do</b>
+        <i>visited</i>[<i>i</i>] &larr; False
+    <b>return</b> Search(<i>arr</i>, <i>start</i>, <i>visited</i>)
+
+<b>function</b> Search(<i>arr</i>, <i>i</i>, <i>visited</i>)         <span class="cmt">&#9655; visited is shared by all calls</span>
+    <b>if</b> <i>i</i> &lt; 0 <b>or</b> <i>i</i> &ge; length(<i>arr</i>) <b>then</b>
+        <b>return</b> False                     <span class="cmt">&#9655; this move leaves the track</span>
+    <b>if</b> <i>visited</i>[<i>i</i>] <b>then</b>
+        <b>return</b> False                     <span class="cmt">&#9655; this stop has been explored already</span>
+    <i>visited</i>[<i>i</i>] &larr; True
+    <b>if</b> <i>arr</i>[<i>i</i>] = 0 <b>then</b>
+        <b>return</b> True                      <span class="cmt">&#9655; a terminal stop</span>
+    <i>dist</i> &larr; <i>arr</i>[<i>i</i>]
+    <b>if</b> Search(<i>arr</i>, <i>i</i> + <i>dist</i>, <i>visited</i>) <b>then</b>
+        <b>return</b> True
+    <b>return</b> Search(<i>arr</i>, <i>i</i> &minus; <i>dist</i>, <i>visited</i>)</pre>
+
+<p>The array <i>visited</i> is passed by reference, so all the recursive calls share the one array. (The two recursive
+calls are written as an <b>if</b> followed by a <b>return</b> rather than joined by <b>or</b>, so that correctness does
+not depend on the disjunction being evaluated lazily.)</p>
+
+<p><b>Correctness.</b> <i>Search</i> is only ever called on stops that the tram can actually move to from <i>start</i>,
+so <b>True</b> is returned only when a terminal stop is genuinely reachable. Conversely, if some terminal stop is
+reachable from <i>start</i>, then it is reachable by a route that visits no stop twice (any repeated stop creates a
+cycle which can simply be deleted from the route); depth-first search visits every vertex reachable from its origin, so
+that terminal stop is visited and its zero entry is detected. Finally, the algorithm always terminates, because
+<i>visited</i>[<i class="v">i</i>] is set to <b>True</b> before the recursive calls and is never reset, so no stop is
+expanded twice.</p>
+
+<h3>(c) <span class="marks">[1 mark]</span> &mdash; why it runs in <i class="v">O</i>(<i class="v">n</i>) time</h3>
+
+<p>A call to <i>Search</i> gets past the test <b>if</b> <i>visited</i>[<i class="v">i</i>] only when
+<i>visited</i>[<i class="v">i</i>] is <b>False</b>, and it then immediately sets it to <b>True</b>, never to be reset.
+There are only <i class="v">n</i> indices, so at most <i class="v">n</i> calls are <em>expanding</em> calls of this kind.
+Each expanding call performs <i class="v">O</i>(1) work of its own and makes at most two further calls, so at most
+2<i class="v">n</i>&nbsp;+&nbsp;1 calls are made altogether, and every non-expanding call costs
+<i class="v">O</i>(1) (one or two comparisons, then a return). Outside the search, <i>IsValid</i> spends
+&Theta;(<i class="v">n</i>) initialising <i>visited</i> and <i class="v">O</i>(1) elsewhere. In total
+&Theta;(<i class="v">n</i>) + <i class="v">O</i>(<i class="v">n</i>)&thinsp;&middot;&thinsp;<i class="v">O</i>(1) =
+<i class="v">O</i>(<i class="v">n</i>). (The extra space is also &Theta;(<i class="v">n</i>): the array <i>visited</i>
+plus a recursion stack of depth at most <i class="v">n</i>.)</p>
+
+<h2>Problem 3 <span class="marks">[13 marks]</span></h2>
+
+<h3>(a) <span class="marks">[2 marks]</span> &mdash; <i>MaxTrips</i></h3>
+
+<p>The trams run independently and each starts a new trip as soon as it finishes the previous one, so within
+<i class="v">t</i> minutes tram <i class="v">i</i> completes exactly
+&lfloor;<i class="v">t</i>&thinsp;/&thinsp;<i>time</i>[<i class="v">i</i>]&rfloor; trips. The maximum total is the sum of
+these over all trams.</p>
+
+<pre class="algo"><b>function</b> MaxTrips(<i>time</i>, <i>t</i>)
+    <i>n</i> &larr; length(<i>time</i>)
+    <i>trips</i> &larr; 0
+    <b>for</b> <i>i</i> &larr; 0 <b>to</b> <i>n</i> &minus; 1 <b>do</b>
+        <i>trips</i> &larr; <i>trips</i> + &lfloor;<i>t</i> / <i>time</i>[<i>i</i>]&rfloor;
+    <b>return</b> <i>trips</i></pre>
+
+<p>For <i>time</i> = [60,&nbsp;40,&nbsp;50,&nbsp;25] and <i class="v">t</i> = 50 this returns
+0&nbsp;+&nbsp;1&nbsp;+&nbsp;1&nbsp;+&nbsp;2 = 4, as required. The function runs in &Theta;(<i class="v">n</i>) time. Note
+also that <i>MaxTrips</i>(<i>time</i>,&nbsp;&middot;) is <em>non-decreasing</em> in <i class="v">t</i>, since every
+&lfloor;<i class="v">t</i>/<i>time</i>[<i class="v">i</i>]&rfloor; is; parts (b) and (d) both rely on this.</p>
+
+<h3>(b) <span class="marks">[3 marks]</span> &mdash; <i>MinTimeBruteForce</i></h3>
+
+<p>Brute force simply tries every candidate time 1,&nbsp;2,&nbsp;3,&nbsp;&hellip; in increasing order and stops at the
+first one that already delivers <i class="v">m</i> trips.</p>
+
+<pre class="algo"><b>function</b> MinTimeBruteForce(<i>time</i>, <i>m</i>)
+    <i>t</i> &larr; 1
+    <b>while</b> MaxTrips(<i>time</i>, <i>t</i>) &lt; <i>m</i> <b>do</b>
+        <i>t</i> &larr; <i>t</i> + 1
+    <b>return</b> <i>t</i></pre>
+
+<p><b>Correctness.</b> The candidates are tested in increasing order and the first one that passes the test is returned,
+so the value returned is by construction the smallest <i class="v">t</i> &ge; 1 with
+<i>MaxTrips</i>(<i>time</i>,&nbsp;<i class="v">t</i>) &ge; <i class="v">m</i>, which is exactly the required minimum time
+<i class="v">T</i>. (No time smaller than 1 need be considered, because <i class="v">m</i> &ge; 1 and every trip takes at
+least one minute.)</p>
+
+<p><b>Termination.</b> Let <i class="v">t</i><sub>min</sub> = min<sub><i class="v">i</i></sub> <i>time</i>[<i class="v">i</i>].
+Then <i>MaxTrips</i>(<i>time</i>, <i class="v">t</i><sub>min</sub>&thinsp;&middot;&thinsp;<i class="v">m</i>) &ge;
+&lfloor;<i class="v">t</i><sub>min</sub><i class="v">m</i>&thinsp;/&thinsp;<i class="v">t</i><sub>min</sub>&rfloor; =
+<i class="v">m</i> &mdash; the fastest tram alone already completes <i class="v">m</i> trips by then &mdash; so the loop
+stops at some <i class="v">t</i> &le; <i class="v">t</i><sub>min</sub>&thinsp;&middot;&thinsp;<i class="v">m</i> at the very
+latest.</p>
+
+<h3>(c) <span class="marks">[2 marks]</span> &mdash; complexity of <i>MinTimeBruteForce</i></h3>
+
+<p>Let <i class="v">T</i> be the value returned. The loop condition is evaluated once for each of
+<i class="v">t</i> = 1,&nbsp;2,&nbsp;&hellip;,&nbsp;<i class="v">T</i>, that is <i class="v">T</i> times, and each
+evaluation runs <i>MaxTrips</i>, which costs &Theta;(<i class="v">n</i>); the rest of each iteration is
+<i class="v">O</i>(1). So the running time is &Theta;(<i class="v">n</i>&thinsp;&middot;&thinsp;<i class="v">T</i>) &mdash;
+linear in the <em>value</em> of the answer.</p>
+
+<p>The worst case is the input that makes <i class="v">T</i> largest. Since
+<i>time</i>[<i class="v">i</i>] &le; <i class="v">k</i> for every <i class="v">i</i>,</p>
+
+<div class="eq"><i>MaxTrips</i>(<i>time</i>, <i class="v">k</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil;) =
+&sum;<sub><i class="v">i</i></sub> &lfloor;<i class="v">k</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil; /
+<i>time</i>[<i class="v">i</i>]&rfloor; &ge; <i class="v">n</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil; &ge;
+<i class="v">m</i>,</div>
+
+<p>so <i class="v">T</i> &le; <i class="v">k</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil;; and this bound is
+attained when every tram is as slow as possible, <i>time</i>[<i class="v">i</i>] = <i class="v">k</i> for all
+<i class="v">i</i>, for then <i>MaxTrips</i>(<i>time</i>,&nbsp;<i class="v">t</i>) =
+<i class="v">n</i>&lfloor;<i class="v">t</i>/<i class="v">k</i>&rfloor;, which first reaches <i class="v">m</i> at
+<i class="v">t</i> = <i class="v">k</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil;. The worst-case running time is
+therefore</p>
+
+<div class="eq">&Theta;(<i class="v">n</i>&thinsp;&middot;&thinsp;<i class="v">k</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil;)
+= &Theta;(<i class="v">k</i>&thinsp;(<i class="v">m</i> + <i class="v">n</i>)),
+&nbsp;&nbsp;&nbsp;since <i class="v">m</i> &le;
+<i class="v">n</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil; &lt; <i class="v">m</i> + <i class="v">n</i>,</div>
+
+<p>which is &Theta;(<i class="v">k</i>&thinsp;<i class="v">m</i>) in the usual case
+<i class="v">m</i> &ge; <i class="v">n</i>. (Using only the cruder bound
+<i class="v">T</i> &le; <i class="v">k</i>&thinsp;<i class="v">m</i> of part (b) one gets
+<i class="v">O</i>(<i class="v">n</i>&thinsp;<i class="v">k</i>&thinsp;<i class="v">m</i>).) The important point is that
+the cost is proportional to the magnitude of the numbers involved rather than to the number of digits needed to write
+them down, so the algorithm is only pseudo-polynomial.</p>
+
+<h3 id="p3d">(d) <span class="marks">[4 marks]</span> &mdash; <i>MinTimeBinarySearch</i></h3>
+
+<p>Because <i>MaxTrips</i>(<i>time</i>,&nbsp;&middot;) is non-decreasing, the predicate
+<i>MaxTrips</i>(<i>time</i>,&nbsp;<i class="v">t</i>) &ge; <i class="v">m</i> is <em>monotone</em>: it is false for every
+<i class="v">t</i> &lt; <i class="v">T</i> and true for every <i class="v">t</i> &ge; <i class="v">T</i>. The candidate
+times therefore behave exactly like a sorted array, and we can binary search for the point at which the predicate
+switches from false to true instead of scanning for it. All we need is a right end of the search interval that is known
+to satisfy the predicate, and part (b) supplies one:
+<i class="v">t</i><sub>min</sub>&thinsp;&middot;&thinsp;<i class="v">m</i>, where
+<i class="v">t</i><sub>min</sub> is the shortest trip duration.</p>
+
+<pre class="algo"><b>function</b> MinTimeBinarySearch(<i>time</i>, <i>m</i>)
+    <i>n</i> &larr; length(<i>time</i>)
+    <i>t</i><sub>min</sub> &larr; <i>time</i>[0]
+    <b>for</b> <i>i</i> &larr; 1 <b>to</b> <i>n</i> &minus; 1 <b>do</b>
+        <b>if</b> <i>time</i>[<i>i</i>] &lt; <i>t</i><sub>min</sub> <b>then</b>
+            <i>t</i><sub>min</sub> &larr; <i>time</i>[<i>i</i>]
+    <i>lo</i> &larr; 1
+    <i>hi</i> &larr; <i>t</i><sub>min</sub> &middot; <i>m</i>              <span class="cmt">&#9655; MaxTrips(time, hi) &ge; m, so T &isin; [lo, hi]</span>
+    <b>while</b> <i>lo</i> &lt; <i>hi</i> <b>do</b>
+        <i>mid</i> &larr; &lfloor;(<i>lo</i> + <i>hi</i>) / 2&rfloor;
+        <b>if</b> MaxTrips(<i>time</i>, <i>mid</i>) &ge; <i>m</i> <b>then</b>
+            <i>hi</i> &larr; <i>mid</i>                <span class="cmt">&#9655; mid is enough, so T &le; mid</span>
+        <b>else</b>
+            <i>lo</i> &larr; <i>mid</i> + 1              <span class="cmt">&#9655; mid is not enough, so T &gt; mid</span>
+    <b>return</b> <i>lo</i></pre>
+
+<p><b>Correctness.</b> The loop invariant is <i>lo</i> &le; <i class="v">T</i> &le; <i>hi</i>. It holds initially, since
+<i class="v">T</i> &ge; 1 and <i class="v">T</i> &le;
+<i class="v">t</i><sub>min</sub>&thinsp;&middot;&thinsp;<i class="v">m</i> as shown in part&nbsp;(b). Inside the loop
+<i>lo</i> &lt; <i>hi</i>, so <i>lo</i> &le; <i>mid</i> &lt; <i>hi</i>: if
+<i>MaxTrips</i>(<i>time</i>,&nbsp;<i>mid</i>) &ge; <i class="v">m</i> then <i class="v">T</i> &le; <i>mid</i> by
+minimality of <i class="v">T</i>, so setting <i>hi</i> &larr; <i>mid</i> preserves the invariant; otherwise
+monotonicity gives <i class="v">T</i> &gt; <i>mid</i>, so setting <i>lo</i> &larr; <i>mid</i>&nbsp;+&nbsp;1 preserves it.
+Each iteration strictly decreases <i>hi</i>&nbsp;&minus;&nbsp;<i>lo</i>, so the loop terminates, and on exit
+<i>lo</i> = <i>hi</i>, which with the invariant forces <i>lo</i> = <i class="v">T</i>.</p>
+
+<p class="note">(On the given example <i>time</i> = [60,&nbsp;40,&nbsp;50,&nbsp;25], <i class="v">m</i> = 4 we get
+<i class="v">t</i><sub>min</sub> = 25 and <i>hi</i> = 100, and the search narrows
+[1,&nbsp;100] to [1,&nbsp;50], [26,&nbsp;50], [39,&nbsp;50], [45,&nbsp;50], [48,&nbsp;50] and finally
+[50,&nbsp;50], returning <i class="v">T</i> = 50 &mdash; indeed <i>MaxTrips</i>(<i>time</i>,&nbsp;50) = 4 while
+<i>MaxTrips</i>(<i>time</i>,&nbsp;49) = 2.)</p>
+
+<h3>(e) <span class="marks">[2 marks]</span> &mdash; complexity of <i>MinTimeBinarySearch</i></h3>
+
+<p>Computing <i class="v">t</i><sub>min</sub> takes &Theta;(<i class="v">n</i>). The search interval initially contains
+<i>hi</i>&nbsp;&minus;&nbsp;<i>lo</i>&nbsp;+&nbsp;1 = <i class="v">t</i><sub>min</sub>&thinsp;&middot;&thinsp;<i class="v">m</i>
+&le; <i class="v">k</i>&thinsp;<i class="v">m</i> candidate times (recall
+<i class="v">t</i><sub>min</sub> &le; <i class="v">k</i>), and every iteration at least halves it, so there are at most
+&lceil;log<sub>2</sub>(<i class="v">k</i>&thinsp;<i class="v">m</i>)&rceil;&nbsp;+&nbsp;1 iterations. Each iteration is
+dominated by its single call to <i>MaxTrips</i>, i.e. &Theta;(<i class="v">n</i>); the rest is
+<i class="v">O</i>(1). Hence the worst-case running time is</p>
+
+<div class="eq">&Theta;(<i class="v">n</i>) +
+<i class="v">O</i>(<i class="v">n</i>&thinsp;log(<i class="v">k</i>&thinsp;<i class="v">m</i>)) =
+<i class="v">O</i>(<i class="v">n</i>&thinsp;log(<i class="v">k</i>&thinsp;<i class="v">m</i>)) =
+<i class="v">O</i>(<i class="v">n</i>&thinsp;(log <i class="v">k</i> + log <i class="v">m</i>)),</div>
+
+<p>and this is tight &mdash; &Theta;(<i class="v">n</i>&thinsp;log(<i class="v">k</i>&thinsp;<i class="v">m</i>)) &mdash;
+in the worst case: an iteration also discards at most half of the remaining candidates, so the loop always performs
+&lfloor;log<sub>2</sub>(<i class="v">t</i><sub>min</sub>&thinsp;<i class="v">m</i>)&rfloor; or
+&lceil;log<sub>2</sub>(<i class="v">t</i><sub>min</sub>&thinsp;<i class="v">m</i>)&rceil; iterations &mdash; that is,
+&Theta;(log(<i class="v">t</i><sub>min</sub>&thinsp;<i class="v">m</i>)) of them, whatever the answer turns out to be
+&mdash; and <i class="v">t</i><sub>min</sub> = <i class="v">k</i> is possible.</p>
+
+<p>Compared with part&nbsp;(c), the cost now grows with the <em>logarithm</em> of the numbers rather than with their
+magnitude: binary search replaces the
+&Theta;(<i class="v">k</i>&lceil;<i class="v">m</i>/<i class="v">n</i>&rceil;) calls to <i>MaxTrips</i> made by the
+brute-force scan with only <i class="v">O</i>(log(<i class="v">k</i>&thinsp;<i class="v">m</i>)) of them.</p>
+
+</body>
+</html>

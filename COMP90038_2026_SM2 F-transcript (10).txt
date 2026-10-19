@@ -1,0 +1,1229 @@
+SPEAKER 0
+I.
+
+SPEAKER 1
+OK, uh, in the second half we will look at
+
+SPEAKER 2
+a greedy algorithm for data compression. Before we start, just one announcement you should all be
+
+SPEAKER 0
+getting the emails. I don't know if it already came out or it will come out about the student learning surveys. Please do fill that out.
+
+SPEAKER 2
+It is particularly.
+
+SPEAKER 0
+Beneficial both for future students and for you if you happen to be in another lecture with me then you
+
+SPEAKER 2
+can give me hints uh on what would make you
+
+SPEAKER 1
+happy but of course you can tell me directly as well. I, I do. I am always happy to know how to improve. We are changing the lecture in some ways every um every year so please suggest things. If that that would make it better or yeah, or say you're happy if you are um so we've seen
+
+SPEAKER 0
+two greedy algorithms, both of them were on graphs. We've also seen the idea that like with this coin selection sometimes greedy works, sometimes does not, so their optimization
+
+SPEAKER 2
+algorithms were selecting things is quite good.
+
+SPEAKER 0
+Let's now discuss data compression. When we want to communicate with another person, sometimes the text is long. You're going to try to make it work better by
+
+SPEAKER 1
+compressing the data by making the data smaller.
+
+SPEAKER 2
+How can we make our data smaller? Let's think of some ideas of what do we want our compression to actually.
+
+SPEAKER 1
+To actually do, let's imagine I have some texts. So let's say I have some message. X and I want to communicate my message, so what do I do? I'm going to apply some function that's going to change my message. Let's say it's going to be some c of my X.
+
+SPEAKER 0
+What properties should she have? What, what are the properties of this whole transformation that
+
+SPEAKER 2
+given uh text make it into a new kind of
+
+SPEAKER 0
+text so that it is a good compression, right?
+
+SPEAKER 2
+So, so what does it mean to compress? Any ideas of properties we want. Make it smaller, make it smaller.
+
+SPEAKER 0
+That's a good, that's a good property. So what does smaller mean?
+
+SPEAKER 2
+Let's say this is a string, right? So it's, it's some, it's some sequence of, of, uh,
+
+SPEAKER 1
+characters. So the property that I would like is that my length of my X and my length of the compressed X, uh, what do I want? I want the length to be.
+
+SPEAKER 0
+Smaller or equal, let's say, right, so I, I, I want it to be smaller than this one property I want, um, is there anything else I want from compression?
+
+SPEAKER 2
+I do see one no, so let me give you
+
+SPEAKER 0
+a hint. Let's imagine I'm compressing every long text to just one character, 0.
+
+SPEAKER 2
+That's the end of my.
+
+SPEAKER 0
+Is this a good compression algorithm? Not particularly. Why is it not good? We cannot get back the original is what I hear. So what do I want? I want to somehow get back the original, get back,
+
+SPEAKER 2
+meaning I have some other ways. So rather than compression, I have some decompression, and I
+
+SPEAKER 1
+want to have a property that says something like, if I decompress my compressed X. Then it should hopefully be the same as the original X, right? So that, that's what I want two things. I want it to be, uh, to be.
+
+SPEAKER 2
+I can't, I should be able to decode it, and
+
+SPEAKER 0
+I would like it to be shorter.
+
+SPEAKER 1
+Can it actually always be shorter?
+
+SPEAKER 2
+Let's have an example.
+
+SPEAKER 0
+How many strings, let's say binary strings, I, I, I have only sequences of zeros and 1s, how many binary strings with 10, uh, with 10 binary characters are there?
+
+SPEAKER 1
+Sequences of 0 and 1 of length 10, how many are there? I hear a 4,0002 to 10, can someone know the
+
+SPEAKER 0
+correct power of 2 to 10?
+
+SPEAKER 2
+1024. Yes, 1024 to 2010.
+
+SPEAKER 1
+2 to 12 is 4,096. Yeah, you know our powers of 2, uh, yeah, uh, but very good, um, so, so, all right, there is
+
+SPEAKER 2
+1,024 different possible sequences. Of 10 characters of 10 binary characters, if I'm going
+
+SPEAKER 0
+to make my compression such that these compressed things are always shorter or or sometimes the same, how many am I going to get?
+
+SPEAKER 2
+If sometimes they're shorter. Then I'm getting at most this many. If I'm getting less, then that's not good because I cannot decode all of them, right?
+
+SPEAKER 1
+So, so you actually. It's not going to work right if I would if I would encode all my 10 digit uh sequences in 1010 binary digit sequences into 5 digit binary sequences, there
+
+SPEAKER 0
+are fewer of them, and by the pigeonhole principle, some of them are not going to decode correctly, so you
+
+SPEAKER 1
+really need to, uh, you really need to.
+
+SPEAKER 2
+Have some messages that are not compressed well or something
+
+SPEAKER 1
+that is not going to be uh shorter but actually longer with that.
+
+SPEAKER 0
+So what what do we want compression to do? Well, Many computer files contain redundancy.
+
+SPEAKER 2
+English language texts contain redundancy. We have. Repeated words and we do not have garbage words typically depending on the kinds of files, lots of savings are possible, especially when you are transmitting data over the network.
+
+SPEAKER 1
+It does help quite a lot in space, in time, and also in energy use. So it's cool.
+
+SPEAKER 2
+We want to do compression.
+
+SPEAKER 1
+How are we going to do any Any kind of
+
+SPEAKER 2
+compression, well, let's figure out what is the simplest thing
+
+SPEAKER 0
+we can do.
+
+SPEAKER 2
+We can try to observe repetitions. Consider the following text. I have a sequence of A's followed by a sequence
+
+SPEAKER 1
+of C's.
+
+SPEAKER 2
+I have 12345678. I have 10 A's followed by, I don't know, maybe 11 C's. What am I going to do if I'm going to tell you that this is what I have as my string?
+
+SPEAKER 0
+Am I going to tell you my string is A
+
+SPEAKER 2
+A A A A A A A A C C C? That's not what I'm going to do.
+
+SPEAKER 0
+I'm going to say I have 10 A's and 10
+
+SPEAKER 1
+C's, right, or whatever is the number. I didn't count them. I probably got the numbers slightly off but uh this is not not so relevant in this particular example the
+
+SPEAKER 0
+number, but the idea is I'm going to observe the numbers and tell you what the numbers are rather than just repeat the message exactly as it is.
+
+SPEAKER 1
+Is this useful?
+
+SPEAKER 0
+It is going to help us if we do have these long sequences of exactly repeated characters.
+
+SPEAKER 1
+Um, let's consider.
+
+SPEAKER 2
+The following I have my text that has sequences of
+
+SPEAKER 1
+A's, B's, C's, A's, but some of them are quite
+
+SPEAKER 2
+short. We can try to encode it as I have 4 A's, 3 B's, A, A. Why do I say AA rather than two A's because
+
+SPEAKER 1
+2A and AA is exactly the same, so there's no need to encode it.
+
+SPEAKER 2
+I have 5 B's, 8 C's D, A, B, C, B, and so on. This is a kind of encoding that could be useful,
+
+SPEAKER 0
+so something is this good for English language.
+
+SPEAKER 2
+Not particularly.
+
+SPEAKER 1
+We have typically at most two characters repeated and that is where actually our encoding does not benefit at all, and AA and 2A seems to behave exactly the same.
+
+SPEAKER 0
+Can you imagine a binary file where this is going to be useful? Often we have files with long sequences of zeros for
+
+SPEAKER 1
+whatever reason, like we are mapping memory to a file, so with an M map you have long sequences where there's nothing happening and compressing that is can be very effective.
+
+SPEAKER 2
+This is an example image.
+
+SPEAKER 1
+I don't know what you see there. I see a sunset sunset over water, but anyway, like
+
+SPEAKER 2
+we have the sequences of zeros and once we're encoding this kind of file with just how many zeros I have and how many once I have this poor man image could result in a quite good, uh, compression ratio.
+
+SPEAKER 1
+Not very exciting by itself, but we can, uh, do something, something better. Let's look at the idea of rather than encoding characters in this naive way, let's do something slightly better. Let's say I have my um. English language texts uh that have.
+
+SPEAKER 2
+Words and we'll try to encode these words in a
+
+SPEAKER 1
+better way. Let's say I have a text that is going to. At the beginning have just four characters T E X T.
+
+SPEAKER 2
+It originally is an ASCI file in ASI, how long.
+
+SPEAKER 1
+Is this in terms of beats?
+
+SPEAKER 2
+I see some whispering.
+
+SPEAKER 1
+I hear 32 bits.
+
+SPEAKER 2
+Each Aki character is going to have 8 bits.
+
+SPEAKER 1
+So we have 8 bits for the T, 8 bits for the E, 8 bits for X, X for T, together 32 bits. So we start with 32 bits.
+
+SPEAKER 2
+Is this Is this good? Well, not particularly if we know that we have an
+
+SPEAKER 0
+English language text and it only has English language, uh, letters. How many letters are there?
+
+SPEAKER 1
+20 something, so how many bits do I need to
+
+SPEAKER 2
+encode English language letters?
+
+SPEAKER 1
+I hear a 6.
+
+SPEAKER 2
+0, 26, so there are 26 letters in the English
+
+SPEAKER 0
+alphabet. How many bits do I need to encode 26 different
+
+SPEAKER 2
+letters?
+
+SPEAKER 1
+Oh We need the nearest power of 2, so we need the 32 options. So we're going to say I have 5 bits for the T, 5 bits for E, and so on. So just by changing our representation from 8 bits to 5 bits per character, I'm getting 20 bits. Looks like a. Looks like already one step optimization. This is reasonable if we know it's an English language
+
+SPEAKER 0
+text, but now we know even more. I see my text, and I see it's not all of the English language, but the text only contains three different characters. It only contains T, E, and X.
+
+SPEAKER 2
+So we can do even better.
+
+SPEAKER 0
+How many bits do I need to encode the T,
+
+SPEAKER 2
+E, and X?
+
+SPEAKER 0
+I need only 2 bits. How am I going to do this? I'm going to make something like a tea.
+
+SPEAKER 1
+The And x are going to now become certain sequences
+
+SPEAKER 2
+of bits. Let's say my t becomes a 00, my e becomes
+
+SPEAKER 1
+a 01, and my x becomes a 1011 is not
+
+SPEAKER 2
+used.
+
+SPEAKER 0
+All right, what happened with this encoding?
+
+SPEAKER 2
+I change each of my symbol's characters into a two
+
+SPEAKER 0
+bit sequence, I'm getting.
+
+SPEAKER 2
+How many? That's 8.
+
+SPEAKER 1
+Yes, correct, we have 8 bits, so 2 for each
+
+SPEAKER 0
+character. This is shorter, so we've got 32, 20, we have 8, but we noticed that actually our X was encoded
+
+SPEAKER 2
+with a 10 and There's 11 is not used for
+
+SPEAKER 0
+anything. So I can further optimize my encoding by saying, well, I do not eat the whole sequence 10, it's enough to say my X.
+
+SPEAKER 2
+Becomes just a one. If my x becomes just a 1, I, is this still a good encoding? Am I still able to encode my text and decode
+
+SPEAKER 1
+it uniquely? Every time I see a 00, I do something.
+
+SPEAKER 2
+Every time I see a 01, I do something. Every time I encounter a 1, I decode it to be the x, so my text becomes a 0 001, a 1, and a 00.
+
+SPEAKER 1
+I got.
+
+SPEAKER 2
+7 beats. Is this clear? Is this clear? OK, we chose completely arbitrarily that we are going to now say that X is the one that has the shorter code.
+
+SPEAKER 0
+Is this a good idea to have X being the one with the shorter code? How, how do we differentiate like 01.
+
+SPEAKER 1
+You. OK, I think.
+
+SPEAKER 0
+How do we distinguish 001 from a 01? Let me write a random text.
+
+SPEAKER 2
+I'm not going to be thinking what's in the text,
+
+SPEAKER 1
+so I'm going to write a 0110 11 011. OK, I forgot what I'm writing. It doesn't matter.
+
+SPEAKER 2
+So what I'm going to do now, I'm looking at the beginning of my string. Does it match a 1? A 01 or a 00. It matches 01. So that means I am decoding this to be the
+
+SPEAKER 1
+letter E. What happens next? The next thing is the one.
+
+SPEAKER 2
+What does it match? Does it match a 00, 01, or a 1? It matches a 1, so the next one is an
+
+SPEAKER 1
+X. Next, I have a 01. What happens? 01 is again N E.
+
+SPEAKER 2
+I was not thinking what I'm going to get, so I hope I'm not getting some weird words, but whatever.
+
+SPEAKER 1
+Uh, one is again. And X I have a 01 next.
+
+SPEAKER 2
+So it's an E.
+
+SPEAKER 1
+I have a 01, it's an E.
+
+SPEAKER 0
+Just by reading my sequence from the left and matching
+
+SPEAKER 2
+it to these three, I can decode.
+
+SPEAKER 0
+Sequences. The problematic sequence would be a sequence that would have just a 0. If it's a 0, then it's somehow incomplete. That's a wrong encoded message.
+
+SPEAKER 1
+Uh, this would not be possible, but let's not worry
+
+SPEAKER 2
+about this for the moment. We are trying to find optimal code and then we hope that our messages are, are finished in a similar
+
+SPEAKER 0
+way as when we are transmitting a byte. What happens if my bye is incomplete?
+
+SPEAKER 2
+Well, then there's nothing I can do.
+
+SPEAKER 1
+I have only partial information, OK, so.
+
+SPEAKER 0
+Is this clear how this encoding of DEX where I
+
+SPEAKER 1
+rather than using a 10, I'm using just the 1
+
+SPEAKER 2
+for the X parts.
+
+SPEAKER 1
+Good. So, uh, let's think about.
+
+SPEAKER 0
+Our original text, our original text had. Four symbols and it was the t that was repeated. T was the one that occurs multiple times because t is the one that occurs multiple times, it makes more
+
+SPEAKER 2
+sense to actually assign thet some.
+
+SPEAKER 0
+Let's go here, assign the team some sequence that is going to be the shorter one.
+
+SPEAKER 2
+So we can say something like tea.
+
+SPEAKER 1
+is going to be now the sequence that has just the single zero, like the shortest sequence that I can
+
+SPEAKER 2
+make, and then the E and the X are going to have things that start with a 1 and then should be differentiated so one of them is a 10,
+
+SPEAKER 1
+the other one is a 11.
+
+SPEAKER 2
+OK, what happens now if I want to encode my
+
+SPEAKER 1
+text TEXT, then. The D is just a 0 E. Is the 10 X is the 11 and T is just the 0.
+
+SPEAKER 2
+What is the total length of my message?
+
+SPEAKER 1
+It is 6. 6 bits. So we started from 32, then at 20, then 8
+
+SPEAKER 2
+bits, then 7 bits. Now we have 6 bits, and this idea, the idea of having different length.
+
+SPEAKER 0
+Sequences for different parts of my message optimized based on frequencies is the idea behind Hoffmann encoding that we'll look
+
+SPEAKER 1
+at in this uh lecture, so.
+
+SPEAKER 2
+The basic idea is, I imagine, relatively clear. We just hope to find a way that we are
+
+SPEAKER 1
+going to match our symbols with some encodings such that
+
+SPEAKER 0
+it becomes short, but how to make it short, and we'll see that there is a greedy way of figuring
+
+SPEAKER 1
+it out. All right. Let's get Back to the slides. So the idea is that we are assigning character codes
+
+SPEAKER 0
+in a way that the most common characters have somehow shorter codes, and we could, for example, say my E,
+
+SPEAKER 1
+which is the most common letter in the English alphabet,
+
+SPEAKER 2
+has the code 0. No other characters can start with 0, so they become longer.
+
+SPEAKER 0
+Is this an optimal way? Not sure immediately, but for the English language you could
+
+SPEAKER 1
+figure out that is the optimal sequence set of sequences, and then you could have something good.
+
+SPEAKER 0
+An important thing is you need to make sure that you can decode your messages.
+
+SPEAKER 1
+I might actually Make sure that we are understanding what's
+
+SPEAKER 2
+happening here and we said T is becoming a 0, E becomes a 10, x becomes 11.
+
+SPEAKER 0
+Let's do something even more optimized.
+
+SPEAKER 2
+I'm going to say my t becomes a 0, the
+
+SPEAKER 1
+E becomes a 1, and the x becomes a 11.
+
+SPEAKER 2
+Is this a good This is a good way of assigning sequences of bits to my characters.
+
+SPEAKER 0
+And I hear a no, why not? Because there is some overlap between E and X. So what kind of overlap? So what, what is the problem?
+
+SPEAKER 1
+If I have a sequence of symbols that represents an e. That is just a 1.
+
+SPEAKER 2
+Then I do not know if I should already stop and decode it to be an e, or I have to read further and make it into an X.
+
+SPEAKER 1
+So when is this encoding a bad encoding if I
+
+SPEAKER 0
+have one sequence.
+
+SPEAKER 1
+That is a prefix of another sequence. If there are no prefixes, if there's no overlap between one sequence and the start of another one, then it feels good, and I can uniquely determine which way to go. If a prefix of one sequence ends up being the same as another sequence, then I will have a problem. I'll not be able to decode it in a unique
+
+SPEAKER 0
+way, so we want to make sure that no code
+
+SPEAKER 1
+is a prefix of another character's code.
+
+SPEAKER 2
+Of course we could use some separators, but the separators
+
+SPEAKER 1
+take a lot of space, so that's typically inefficient. All right, so this is the idea behind the uh variable length encoding. So let's try to.
+
+SPEAKER 2
+Imagine a text that contains just the letters A, B,
+
+SPEAKER 1
+C, D, E, F, G, and we're going to count
+
+SPEAKER 0
+the numbers of occurrences of the symbols.
+
+SPEAKER 1
+We're going to count and we'll say like the B occurs only 4 times, the D occurs 5 times, the G 10, F 12, and so on, with A being
+
+SPEAKER 2
+the most common symbol in the text.
+
+SPEAKER 0
+With this information we can try to build a table
+
+SPEAKER 2
+of codes for these symbols, and what we're going to
+
+SPEAKER 1
+typically do is we're going to give these shorter codes
+
+SPEAKER 2
+to the most common symbols.
+
+SPEAKER 1
+So here the A&E were the most common ones, so we gave them 2.
+
+SPEAKER 2
+Bit codes, whereas the other ones have 3 and 4 bit codes. In particular, the two least common symbols have the 4
+
+SPEAKER 1
+bit codes. That's an idea, like a sensible idea of making it, of making the codes for the symbols. How do we now organize my table if I'm going
+
+SPEAKER 0
+to be encoding things and decoding things? How can I effectively figure out how to encode a
+
+SPEAKER 2
+text and how to decode a text? Well, encoding is relatively easy if I have this table,
+
+SPEAKER 1
+if I have a word. Then I go through each.
+
+SPEAKER 2
+Character for each character I can find my.
+
+SPEAKER 1
+Sequence that corresponds to it. So if I have the character D, I immediately start with the 0001, and I see the next character. I, I, I can immediately select the next bit string.
+
+SPEAKER 0
+What about the other way around? What about decoding? If I have a sequence of zeros and 1s, how can I quickly figure out which of my symbols this
+
+SPEAKER 1
+is? And let's first try to naively find any way how
+
+SPEAKER 2
+I have a sequence of zeros and ones.
+
+SPEAKER 0
+How do I figure out which of the symbols this
+
+SPEAKER 1
+is? The sequence is, let's say longer than 4 characters, so
+
+SPEAKER 2
+I have a 0110, 10, and so on and so. What do I look at first?
+
+SPEAKER 1
+What do I compare it with?
+
+SPEAKER 2
+The encoding was fast because for every symbol, the symbols
+
+SPEAKER 1
+are I can put them in an array and for every item in the array I quickly look it up. If I want to.
+
+SPEAKER 2
+I could use a dictionary. I can use something that's just going to associate my symbols with the codes.
+
+SPEAKER 0
+What about the other way around when I have the code and the code is, we don't know what length it is, how can I figure this out? Then I way is compare them one by one, right?
+
+SPEAKER 1
+So we were, if we were to compare them one by one, I see, does the beginning of my sequence
+
+SPEAKER 2
+start with 11? No. Does it start with 4 zeros? No. Does it start with and then I thought, ah, this
+
+SPEAKER 1
+was a 1001, so it actually started with the code
+
+SPEAKER 2
+for the e, so my message starts with thee.
+
+SPEAKER 1
+I cut off the two symbols.
+
+SPEAKER 2
+It is quite inefficient.
+
+SPEAKER 0
+For decoding everything, I need to make these steps, and
+
+SPEAKER 2
+an useful data structure for organizing such sequences is a so-called try. And the try is a binary search tree. Sorry, it's a binary tree for search applications, and it's organized in the following way. We are having bits associated with the left and the right child every time.
+
+SPEAKER 1
+Uh, we are going down and left. We associate it with the bit 0 every time we go down and right, we associate it with the bit
+
+SPEAKER 2
+1. So what's going on?
+
+SPEAKER 0
+I'm going to put all my sequences of Corresponding to
+
+SPEAKER 2
+the encodings of the symbols in the tribe, for example, the B had the code 4 zeros, which means this
+
+SPEAKER 0
+corresponds to going 4 times to the left.
+
+SPEAKER 1
+So I start, I go left, left, left, left.
+
+SPEAKER 2
+This is the character for B, whereas right and left,
+
+SPEAKER 1
+that's 1 and 0, is the code for the. That is the idea of organizing it because we have
+
+SPEAKER 0
+no prefixes. Each of our symbols is going to be on a
+
+SPEAKER 2
+different path, so we have no overlaps. If there would be a prefix, it would be above
+
+SPEAKER 1
+another thing on the tree, so that would be a bad thing. So now they're all in different places, and if we
+
+SPEAKER 0
+have used all the codes, then all of them are
+
+SPEAKER 2
+leaves in such a tree.
+
+SPEAKER 0
+Now that I have this, I encounter my sequence of
+
+SPEAKER 2
+bits. It starts with 1001.
+
+SPEAKER 0
+What do I do? I am going to immediately know that because the first symbol is 1, all the things that start with 1 are going to be on the right side of my try.
+
+SPEAKER 2
+So 1001, I start with a 1.
+
+SPEAKER 0
+I know I'm going to the right side here. So 1 means I'm going here.
+
+SPEAKER 2
+Then the next character I encounter is a 0.
+
+SPEAKER 0
+I go here. It's a complete sequence. I know the first symbol was an e. And I can reset that is go back to the
+
+SPEAKER 2
+top of my tree, start from there. Then the next thing is a 0 and a 1, because it's a 0, I know I go left.
+
+SPEAKER 0
+Then it's a 1, I go to the right, then
+
+SPEAKER 2
+I see what the next character is. Depending on if it's a 0 or a 1, I'm
+
+SPEAKER 1
+going to get an F or a C.
+
+SPEAKER 0
+This way we are every time we encounter a single binary digit, we are moving one place in our try,
+
+SPEAKER 1
+and every time we get to the bottom of a
+
+SPEAKER 2
+try we decode a full.
+
+SPEAKER 1
+So this this way of Decoding things ends up being
+
+SPEAKER 0
+linear in the number of bits of the encoded message.
+
+SPEAKER 1
+So we're just processing the message exactly once and we're getting our decoded message, which is pretty exciting.
+
+SPEAKER 2
+So we have fast encoding and fast decoding, but fast
+
+SPEAKER 0
+encoding and fast decoding, assuming that we had this table
+
+SPEAKER 1
+ready.
+
+SPEAKER 2
+Mm, OK, uh, maybe just to make sure that we
+
+SPEAKER 0
+understand how this works, I'm going to ask you to
+
+SPEAKER 2
+make up a three letter word that consists of letters
+
+SPEAKER 1
+A, B, C, D, F, G, encode it.
+
+SPEAKER 0
+And pass it to your neighbor and see if the
+
+SPEAKER 2
+neighbor can decode it and the other way around.
+
+SPEAKER 1
+1.5 minutes should be enough for that. Uh, there are several 3 letter words that you can
+
+SPEAKER 0
+make up with the letters here.
+
+SPEAKER 2
+It doesn't have to be 3 letters. It can be 2 or 4. And, uh, also, it doesn't have to be a real
+
+SPEAKER 1
+word if you, if you don't want to. So just to make sure that you understand how the encoding and decoding works, I'll give you a moment for that. Yeah. more we The encoding should be relatively easy. You just take your symbols, put them in decoding, that's
+
+SPEAKER 2
+the slightly annoying part.
+
+SPEAKER 1
+That is why I might switch to the trial. so that you can both relatively quickly see which way to go to know what is the symbol that you find, and otherwise you can also just look up what are the encodings of each symbol. I Yeah. It seems to be working quite well. So, uh, so what is happening now is if we have a message, for example, the word begged, it's a bit more than our three characters. We are having each of the original characters encoded by the bit sequences, and you can see it is getting quite short. In the slides you have another example where you do save quite a lot of bits.
+
+SPEAKER 0
+OK, so this seems to be working quite well.
+
+SPEAKER 1
+We can both encode the message fast.
+
+SPEAKER 0
+You can decode the message fast, but the thing that we assumed is we somehow selected these codes in a way that these have 2 bits, these have 4 bits. We could have done something else. We could have selected. Selected the most common character and gave it a one character, sorry, one bit sequence and the other one's longer. What is the best way to do it? What is the way, the best way to actually, uh,
+
+SPEAKER 2
+to encode to, to make such a table and to build the corresponding tribe?
+
+SPEAKER 1
+So I'm going to. Here, give an idea of what we could do.
+
+SPEAKER 0
+Let's remember we have, we are talking about greedy algorithms, so let's first try to do it in some greedy
+
+SPEAKER 1
+way. I have my characters that appear.
+
+SPEAKER 0
+The characters that appear and their frequencies.
+
+SPEAKER 1
+So like the B is the least common one.
+
+SPEAKER 2
+There's only 4 B's, there are 5 D's, there are
+
+SPEAKER 1
+10 G's, and so on. A&E are the two most common characters.
+
+SPEAKER 0
+How can I do this greedily? Greedily means I'm going to take something that is optimal, that is most.
+
+SPEAKER 2
+Most useful, most common, or least annoying, and so on,
+
+SPEAKER 0
+take that and hope that extending the solution to the
+
+SPEAKER 1
+global solution is going to be good and then we'll actually always have to justify that this extension works. We have done this justification for uh for Prim and Dykstra. I'll give only a hint of the justification.
+
+SPEAKER 0
+Let's think of some greedy way of doing that. I do not promise that the greedy way is going
+
+SPEAKER 2
+to be the optimal way yet, but let's say I'm taking my most common character, the A, and I say,
+
+SPEAKER 0
+oh, the A is the really most common one, so let's take that one as my shortest sequence.
+
+SPEAKER 1
+So I'm going to say something like uh. I'm starting with my 3 and I'm going to say A is the 1 that I want to immediately decode
+
+SPEAKER 2
+if I get a 0, and if I have a
+
+SPEAKER 0
+1, then I try something else.
+
+SPEAKER 2
+Is this a greedy way of doing it? I chose the most common one. I gave it the shortest sequence I had.
+
+SPEAKER 0
+It's a greedy way of attacking the problem. Let's continue. Then the greedy algorithm repeats this again and again, so now I choose my next most common symbol. What is the next most common symbol?
+
+SPEAKER 2
+It's going to be the E.
+
+SPEAKER 1
+The E, so the A got the sequence 0, the E got the sequence 10, then I continue from the E. The next one is going to be the C. With the sequence to the right, to the right and to the left, so right, right, left, 110, I continue, I get my uh uh my. F And so on. How many are there more? Quite a lot. F G. The And F G. D and B. And they get these sequences of 4 characters, 5 characters, and 6, or 6 binary characters.
+
+SPEAKER 2
+Is this a solution?
+
+SPEAKER 0
+It is a way to encode text.
+
+SPEAKER 1
+I will, I am going to get, uh, I am going to get my codes 1111. 123455 1s and the 0 and the 61s for the
+
+SPEAKER 2
+B. It is a way to encode my text, but is
+
+SPEAKER 0
+it a good way to encode the text? It's not necessarily a good one because all these all these codes are very long and B and the A
+
+SPEAKER 2
+is unnecessarily short, so it is a greedy way to
+
+SPEAKER 0
+approaching the problem, but not the right greedy way.
+
+SPEAKER 2
+Why is it not the right greed, so why, why
+
+SPEAKER 0
+is it not optimal?
+
+SPEAKER 2
+Yes.
+
+SPEAKER 1
+Because every time you you handle that on the tree. I hear because every time you move down in the
+
+SPEAKER 2
+tree, you add another bit.
+
+SPEAKER 0
+Could there be texts for which this is actually optimal? There could be a text for which this is optimal if my distribution of letters is such that the A is extremely common and E is at least twice less common, C is even twice less common, and so on, then this could work, but that's not the case for most texts. We want something that's going to be good for most
+
+SPEAKER 2
+texts. Actually, we want something that's going to be optimal, so. Uh, let's imagine a text for which this is not
+
+SPEAKER 0
+going to work very well. Imagine a text where all the characters have the same frequencies. What happens when we have all the same frequencies? We're still going to get this extremely skewed tree. But the characters have the same frequencies, which means we'll get as many of the somewhat shorter ones as extremely
+
+SPEAKER 2
+long ones.
+
+SPEAKER 1
+So it's going to actually make our messages much, much
+
+SPEAKER 2
+longer. So let's think of a different way of solving the
+
+SPEAKER 0
+problem that is still going to be a greedy way,
+
+SPEAKER 1
+but a better greedy way. Here we have The frequencies again, um.
+
+SPEAKER 2
+And let's rather than.
+
+SPEAKER 0
+Look at the ones with the highest frequencies. Think about the ones with the lowest frequency.
+
+SPEAKER 1
+OK, I take my B, B has the lowest frequency.
+
+SPEAKER 0
+What can I do with the B because it has the lowest frequency? If it has the lowest frequency, I want it to be somehow at the bottom of my tree, right? My tree is somehow we don't know how balanced or imbalanced it is, but we know that the thing with the lowest frequency should be at the bottom of the tree together with the other thing with the lowest frequency.
+
+SPEAKER 2
+OK, so we have an even more idea about the
+
+SPEAKER 0
+greedy algorithm. I'm looking at the two things with the lowest frequency, and I put them together at the bottom of my
+
+SPEAKER 2
+tree. So let's do that. Let's take my B and D.
+
+SPEAKER 0
+And put them together.
+
+SPEAKER 2
+I'm going to say my B and D are the
+
+SPEAKER 0
+two least common ones, so I want my tree to have the two of them together and somehow at the
+
+SPEAKER 2
+bottom of the tree, and then they'll just differ by
+
+SPEAKER 1
+one last bit. Good, that's fine.
+
+SPEAKER 0
+Now I want to continue with my greedy approach. In order to continue with my greedy approach, I need
+
+SPEAKER 2
+to have the same setup. So before I had just characters with their frequencies.
+
+SPEAKER 0
+Now I have something that's not a character but is a character or a character. It's a B or a D. What is the frequency of B or D?
+
+SPEAKER 2
+If how often in my text does the character either
+
+SPEAKER 0
+a B or a D appear?
+
+SPEAKER 1
+B appears 4 times. D appears 5 times.
+
+SPEAKER 0
+Together they appear.
+
+SPEAKER 2
+9 times we just add the thing so we have a B together with the D and we can remember this thing together appears 9 times, all right, and we
+
+SPEAKER 1
+have something in in the tree already.
+
+SPEAKER 0
+Let's continue our greedy approach. We are looking for the things that appear least often.
+
+SPEAKER 2
+The things that appear least often are either my B
+
+SPEAKER 0
+or D, because this appears 9 times, or the G.
+
+SPEAKER 2
+Because G appears 10 times.
+
+SPEAKER 0
+So now when I keep building my tree in one
+
+SPEAKER 2
+place in the tree, I'll have this BD combination.
+
+SPEAKER 0
+In another place in the tree, I'll have my G. And the two of them I want to combine. I want to fuse. I want to merge these classes.
+
+SPEAKER 2
+So I'm going to say now my tree has an
+
+SPEAKER 1
+additional level.
+
+SPEAKER 2
+Where one way I'm going to the BRD, the other way I'm going to the gym.
+
+SPEAKER 1
+So now I have a part of the tree that
+
+SPEAKER 0
+is able to encode B or D or G, and what is the frequency that this thing appears? How often does this appear?
+
+SPEAKER 2
+It appears as many times as B or D or
+
+SPEAKER 1
+G.
+
+SPEAKER 2
+B or D appears 9 times, so I'm just adding
+
+SPEAKER 1
+my 9 to the 10. This now becomes a new fused thing with 19 occurrences.
+
+SPEAKER 0
+OK, we continue, we have something that's already ready, that
+
+SPEAKER 1
+has 19 occurrences, and we have the F, C, E,
+
+SPEAKER 2
+and A.
+
+SPEAKER 0
+What is the least common thing now?
+
+SPEAKER 2
+What's the least common thing now? I hear an F. Yes, F is the least commonly appearing. Am I fusing the F with the BFG? No, because that has 19.
+
+SPEAKER 1
+That's not the smallest.
+
+SPEAKER 2
+C is the second smallest, so F and C are
+
+SPEAKER 0
+the ones that we want to combine next.
+
+SPEAKER 1
+Uh, so we can now, we can now, uh, fuse our F and C into another part of my tree where.
+
+SPEAKER 2
+I sometimes am going to encounter FNC and if it's
+
+SPEAKER 1
+a If it's a 0, it's an F. If it's a 1, it's a C, and their combined
+
+SPEAKER 2
+frequency is going to be a 26. Now again, I look at my tree, I see that
+
+SPEAKER 1
+19 and 26 are the two smallest ones.
+
+SPEAKER 2
+I combine them.
+
+SPEAKER 1
+I get, what is it, 45. I combine my E and A. They have some combined frequency.
+
+SPEAKER 2
+I combine these two, and now I've got some way
+
+SPEAKER 1
+of making my tree. The tree is somewhat balanced. The characters that have the highest frequencies are the ones
+
+SPEAKER 2
+with the shortest code. I get just the 10 and the 11, and the
+
+SPEAKER 1
+characters that are least often appearing have the longest ones.
+
+SPEAKER 0
+This is actually optimal. Showing that it is optimal is not too complicated.
+
+SPEAKER 2
+It's a five minute reasoning.
+
+SPEAKER 0
+I recommend thinking about it and if, if you want
+
+SPEAKER 1
+to stay with me after the lecture we can, we can discuss it or come to my consultation hours of course, uh, I, I think we can do it in 5 minutes after the lecture if you're interested otherwise let's continue with that, uh, with this so, so what's going
+
+SPEAKER 2
+to happen? We are repeatedly selecting two smallest weights and fuse them. It's another greedy method. We take the smallest ones, we combine them, and again we check the smallest ones.
+
+SPEAKER 1
+So this is what happened with the particular example. I think on the paper I drew it upside down, but it's, it's exactly the same thing just, uh, just, uh, combining it left, right.
+
+SPEAKER 0
+How do we store the trees to fuse next? Again, we want to find the minimum and the next minimum.
+
+SPEAKER 2
+What's the best way to keep things where we want
+
+SPEAKER 0
+the minima. A priority queue just like last time, so a priority
+
+SPEAKER 2
+queue which has the minimum heap of weights, let's say these are my. Letters together with their frequencies.
+
+SPEAKER 1
+Play with turning this into a minimum heat that's a good exercise for uh for the exam how you do this. I mean, let's not do it now because we, we do not have that much time, but what would be
+
+SPEAKER 0
+in the top of uh.
+
+SPEAKER 2
+Of a minimum heap.
+
+SPEAKER 1
+Therefore, the minimum value is always at the top of the heap, with the second minimum being somewhere in as
+
+SPEAKER 2
+one of the children. So when this is converted to a heap, we can quickly get the minimum.
+
+SPEAKER 1
+After we get it out, we quickly get the next minimum. So what, so that's what the heap looks like.
+
+SPEAKER 2
+As long as my priority queue has more than one element, I remove the two minima.
+
+SPEAKER 0
+I fuse them, and I push it back into the
+
+SPEAKER 1
+priority queue with the combined priority. That's all that is happening in the Hoffman.
+
+SPEAKER 2
+Algorithm, it's a nice example of a greedy algorithm, and
+
+SPEAKER 0
+I showed you that doing it like completely naively.
+
+SPEAKER 2
+I'm doing it greedily by saying, oh, I take the
+
+SPEAKER 1
+largest one that does not work, but if you take
+
+SPEAKER 2
+two smallest ones, the greedy approach actually gives the best
+
+SPEAKER 1
+solution.
+
+SPEAKER 0
+We've been discussing uh compression, so I'll still spend a moment talking about what uh what things need to be done when it comes to compressing texts. First, when you have your compressed text, in addition to the text, you need to know what the what the
+
+SPEAKER 1
+tree is, what the table is. You can either send it along with the message. If the message is big that it's absolutely no cost
+
+SPEAKER 2
+in some cases for something like the English language, you
+
+SPEAKER 0
+could figure out what the table is in advance so
+
+SPEAKER 2
+everyone knows it or for even for larger things. The idea behind Hoffmann's algorithm is present in many modern
+
+SPEAKER 0
+algorithms.
+
+SPEAKER 2
+Things like GZI have, uh, these ways of, of, uh, having a way to encode each blocks.
+
+SPEAKER 0
+Some blocks are already so random that this doesn't help. Some for some blocks it says this is compressed exactly
+
+SPEAKER 1
+with the Hoffman, um, with the Hoffman tree algorithm.
+
+SPEAKER 0
+The more modern. Algorithms typically do not have a fixed table for the whole message but have like a sliding window where over the message that your tree changes, so that's that's what
+
+SPEAKER 1
+the modern compression algorithms do, but somehow the basic idea is still around that.
+
+SPEAKER 2
+And think. When is such a half munchy encoding good when it's not good?
+
+SPEAKER 1
+Are the texts for which this is not going to
+
+SPEAKER 2
+help?
+
+SPEAKER 1
+You've got a large variability of character.
+
+SPEAKER 2
+If we have a large number of characters with similar
+
+SPEAKER 0
+numbers of occurrences, then, well, if the numbers of occurrences
+
+SPEAKER 2
+are the same, your tree is going to be almost flat, so the lengths of the encodings are going to
+
+SPEAKER 1
+be very similar, then it does not help at all. So there are examples where it doesn't work.
+
+SPEAKER 0
+Next week is the last two lectures. The first one is going to introduce complexity theory and NP completeness, quite large topics that extend that that say
+
+SPEAKER 2
+where do algorithms complexity research go on. A lot of fun things, and then there will also be some preparation for the exam.
+
+SPEAKER 1
+That's it for today. Thank you.
