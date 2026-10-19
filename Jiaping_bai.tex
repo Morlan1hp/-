@@ -1,0 +1,238 @@
+% COMP90038 Algorithms and Complexity -- Assignment 1, Semester 2 2026
+% Compile with pdfLaTeX (compile out of the box on Overleaf).
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.3cm,top=2cm,bottom=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+% --- house style -------------------------------------------------------------
+\algrenewcommand\textproc{\textrm}          % procedure names in roman, as in the spec
+\algrenewcommand\algorithmicrequire{\textbf{input:}}
+\renewcommand{\thealgorithm}{\arabic{algorithm}}
+\newcommand{\id}[1]{\ensuremath{\mathit{#1}}}   % identifiers
+\newcommand{\Oh}{\ensuremath{O}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\setlist{topsep=0.2em,itemsep=0.15em,parsep=0pt}
+\setlength{\intextsep}{0.7\baselineskip}   % space around the algorithm floats
+\begin{document}
+% --- title -------------------------------------------------------------------
+\begin{center}
+Name: JIAPING BAI \qquad Student ID: 1864707
+\end{center}
+\vspace{-0.4em}
+\hrule
+\vspace{0.6em}
+%==============================================================================
+\section*{Problem 1}
+\subsection*{(a)(i)}
+\[
+T(0)=\Theta(1),
+\qquad
+T(n)=T(n-1)+\Theta(\log n) \quad\text{for } n\ge 1 .
+\]
+\subsection*{(a)(ii)}
+$T(n)\in\Theta(n\log n)$. Backward substitution gives
+$T(n)=T(0)+\sum_{i=1}^{n}\Theta(\log i)=\Theta\bigl(\log_2(n!)\bigr)$, using
+$\sum_{i=1}^{n}\log_2 i=\log_2\prod_{i=1}^{n} i=\log_2(n!)$.
+
+By Stirling's formula, $n!=\sqrt{2\pi n}\,(n/e)^{n}\bigl(1+\Theta(1/n)\bigr)$, so
+$\log_2(n!)=n\log_2 n-n\log_2 e+\Oh(\log n)=n\log_2 n-\Theta(n)$.
+The subtracted term is positive, so $\log_2(n!)\le n\log_2 n$ and $\log_2(n!)\in\Oh(n\log n)$; and
+since $\Theta(n)=o(n\log n)$, we get $\log_2(n!)\ge n\log_2 n-o(n\log_2 n)$, so
+$\log_2(n!)\in\Omega(n\log n)$. Hence $\log_2(n!)\in\Theta(n\log n)$ and therefore
+$T(n)\in\Theta(n\log n)$.
+\subsection*{(b)(i)}
+\textbf{return } $2p+q,\;2q$
+\subsection*{(b)(ii)}
+$T(k)\in\Theta(k)$. Each invocation of \textit{TotalLightCountBitsRec} does constant work and makes
+one recursive call on $k-1$, so $T(k)=T(k-1)+\Theta(1)$ with $T(1)=\Theta(1)$, which unwinds to
+$\Theta(k)$. \textit{TotalLightCountBits} adds one call and constant work, so it is $\Theta(k)$ as
+well.
+\subsection*{(b)(iii)}
+\textit{TotalLightCountBits} is more efficient, by a factor of $\Theta(n)$: $\Theta(\log n)$
+against $\Theta(n\log n)$.
+
+Let $n=2^{k}$, so $k=\log_2 n$. The integers representable with $k$ bits are exactly
+$0,\dots,2^{k}-1=0,\dots,n-1$, i.e.\ all the tram numbers except $n$ itself; and $n=2^{k}$ has
+exactly one light on. So the answer to the problem of part~(a) is
+\[
+\textit{TotalLightCountBits}(\log_2 n) + 1 .
+\]
+Its cost is $\Theta(\log n)$ to obtain the binary representation of $n$, plus
+$\Theta(k)=\Theta(\log n)$ for the recursion by (b)(ii): in total $\Theta(\log n)$.
+%==============================================================================
+\section*{Problem 2}
+\subsection*{(a)(i)}
+\[
+\id{arr}=[1,\,1]
+\qquad\text{and}\qquad
+\id{start}=0 .
+\]
+
+Since no entry of \id{arr} is $0$, the network has no terminal stop, so the configuration is
+invalid and the procedure must return \textbf{False}. \textit{IsValid\_AI} instead recurses
+forever, so it never returns \textbf{False}.
+
+\subsection*{(a)(ii)}
+
+The disjunction \textbf{or} is evaluated from left to right, so the call
+\textit{IsValid\_AI}$(\id{arr},\,i+\id{dist})$ is made first.
+\begin{enumerate}[label=\arabic*.,leftmargin=2.2em]
+\item \textit{IsValid\_AI}$([1,1],\,0)$: $i=0$; $0\le i<2$; $\id{arr}[0]=1\neq 0$;
+$\id{dist}\gets 1$; evaluate the first disjunct, i.e.\ call \dots
+\item \textit{IsValid\_AI}$([1,1],\,1)$: $i=1$; $0\le i<2$; $\id{arr}[1]=1\neq 0$;
+$\id{dist}\gets 1$; evaluate the first disjunct, i.e.\ call \dots
+\item \textit{IsValid\_AI}$([1,1],\,2)$: $i=2\ge \id{length}(\id{arr})=2$, so
+\textbf{return False}.
+\item Back in call~2: the first disjunct is \textbf{False}, so evaluate the second one, i.e.\
+call \textit{IsValid\_AI}$([1,1],\,0)$ --- and we are back in call~1.
+\item \textit{IsValid\_AI}$([1,1],\,0)$: identical to call~1; evaluate the first disjunct \dots
+\item \textit{IsValid\_AI}$([1,1],\,1)$: identical to call~2; evaluate the first disjunct \dots
+\item \textit{IsValid\_AI}$([1,1],\,2)$: \textbf{return False}.
+\item Back in call~6: evaluate the second disjunct, i.e.\ call
+\textit{IsValid\_AI}$([1,1],\,0)$ --- and the whole pattern starts again.
+\end{enumerate}
+Calls 5--8 repeat calls 1--4 with exactly the same arguments, so the sequence of calls
+$0,1,2,0,1,2,\dots$ continues forever and the top-level call never returns.
+
+\subsection*{(b)}
+
+A depth-first search from \id{start}, marking the stops already visited.
+
+\begin{algorithm}[H]
+\caption{}
+\begin{algorithmic}[1]
+\Function{IsValid}{$\id{arr},\, \id{start}$}
+\State $n \gets \Call{length}{\id{arr}}$
+\If{$\id{start} < 0$ \textbf{or} $\id{start} \ge n$}
+\State \Return False
+\EndIf
+\State $\id{visited} \gets$ \textbf{new} Boolean array with indices $0 \ldots n-1$
+\For{$i \gets 0$ \textbf{to} $n-1$}
+\State $\id{visited}[i] \gets$ False
+\EndFor
+\State \Return $\Call{Search}{\id{arr},\, \id{start},\, \id{visited}}$
+\EndFunction
+\Statex
+\Function{Search}{$\id{arr},\, i,\, \id{visited}$} \Comment{\id{visited} is shared by all calls}
+\If{$i < 0$ \textbf{or} $i \ge \Call{length}{\id{arr}}$}
+\State \Return False
+\EndIf
+\If{$\id{visited}[i]$}
+\State \Return False
+\EndIf
+\State $\id{visited}[i] \gets$ True
+\If{$\id{arr}[i] = 0$}
+\State \Return True
+\EndIf
+\State $\id{dist} \gets \id{arr}[i]$
+\If{$\Call{Search}{\id{arr},\, i + \id{dist},\, \id{visited}}$}
+\State \Return True
+\EndIf
+\State \Return $\Call{Search}{\id{arr},\, i - \id{dist},\, \id{visited}}$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+\subsection*{(c)}
+Since $\id{visited}[i]$ is set before the recursive calls and never reset, at most $n$ calls to
+\textit{Search} get past the visited test. Each of those does $\Oh(1)$ work and makes at most two
+more calls, so in total at most $2n+1$ calls are made, each taking $\Oh(1)$. Adding the
+$\Theta(n)$ initialisation of \id{visited} gives $\Oh(n)$.
+%==============================================================================
+\section*{Problem 3}
+\subsection*{(a)}
+Within $t$ minutes tram $i$ makes $\lfloor t/\id{time}[i]\rfloor$ trips.
+\begin{algorithm}[H]
+\caption{}
+\begin{algorithmic}[1]
+\Function{MaxTrips}{$\id{time},\, t$}
+\State $n \gets \Call{length}{\id{time}}$
+\State $\id{trips} \gets 0$
+\For{$i \gets 0$ \textbf{to} $n-1$}
+\State $\id{trips} \gets \id{trips} + \lfloor t / \id{time}[i] \rfloor$
+\EndFor
+\State \Return $\id{trips}$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+$\textit{MaxTrips}(\id{time},\cdot)$ is \emph{non-decreasing} in $t$, since every
+$\lfloor t/\id{time}[i]\rfloor$ is.
+\subsection*{(b)}
+\begin{algorithm}[H]
+\caption{}
+\begin{algorithmic}[1]
+\Function{MinTimeBruteForce}{$\id{time},\, m$}
+\State $t \gets 1$
+\While{$\Call{MaxTrips}{\id{time}, t} < m$}
+\State $t \gets t + 1$
+\EndWhile
+\State \Return $t$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+The loop terminates: writing $t_{\min}=\min_i \id{time}[i]$, the fastest tram on its own makes
+$m$ trips within $t_{\min}\cdot m$ minutes, so $\textit{MaxTrips}(\id{time}, t_{\min}m)\ge m$ and
+the loop stops at some $t\le t_{\min}\cdot m$.
+\subsection*{(c)}
+Let $T$ be the value returned. The loop condition is evaluated once for each of
+$t=1,2,\dots,T$, and each evaluation runs \textit{MaxTrips}, which costs
+$\Theta(n)$; the rest of each iteration is $\Oh(1)$. So the running time is $\Theta(n\cdot T)$.
+
+Since $\id{time}[i]\le k$ for every $i$,
+\begin{align*}
+\textit{MaxTrips}\bigl(\id{time},&k\lceil m/n\rceil\bigr)  =\sum_{i}\left\lfloor \frac{k\lceil m/n\rceil}{\id{time}[i]}\right\rfloor \\
+\;&\ge\; n\lceil m/n\rceil \;\ge\; m ,
+\end{align*}
+so $T\le k\lceil m/n\rceil$; and this bound is attained when every tram is as slow as possible,
+$\id{time}[i]=k$ for all $i$, for then $\textit{MaxTrips}(\id{time},t)=n\lfloor t/k\rfloor$, which
+first reaches $m$ at $t=k\lceil m/n\rceil$. Hence the worst-case running time is
+\[
+\Theta\bigl(n\cdot k\lceil m/n\rceil\bigr)=\Theta\bigl(k(m+n)\bigr), \qquad\text{since } m\le n\lceil m/n\rceil < m+n .
+\]
+\subsection*{(d)}
+By (a) the values $\textit{MaxTrips}(\id{time},1),\textit{MaxTrips}(\id{time},2),\dots$ form a
+sorted array, and $T$ is the position of the first entry that reaches $m$. Binary search finds
+that position. Part~(b) supplies the right end of the range, $t_{\min}\cdot m$.
+\begin{algorithm}[H]
+\caption{}
+\begin{algorithmic}[1]
+\Function{MinTimeBinarySearch}{$\id{time},\, m$}
+\State $n \gets \Call{length}{\id{time}}$
+\State $t_{\min} \gets \id{time}[0]$
+\For{$i \gets 1$ \textbf{to} $n-1$}
+\If{$\id{time}[i] < t_{\min}$}
+\State $t_{\min} \gets \id{time}[i]$
+\EndIf
+\EndFor
+\State $\id{lo} \gets 1$
+\State $\id{hi} \gets t_{\min} \cdot m$
+\Comment{$\textit{MaxTrips}(\id{time},\id{hi})\ge m$, so $T\in[\id{lo},\id{hi}]$}
+\While{$\id{lo} < \id{hi}$}
+\State $\id{mid} \gets \lfloor (\id{lo}+\id{hi})/2 \rfloor$
+\If{$\Call{MaxTrips}{\id{time}, \id{mid}} \ge m$}
+\State $\id{hi} \gets \id{mid}$
+\Else
+\State $\id{lo} \gets \id{mid} + 1$
+\EndIf
+\EndWhile
+\State \Return $\id{lo}$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+\subsection*{(e)}
+Since computing $t_{\min}$ takes $\Theta(n)$, and the search interval initially contains
+$\id{hi}-\id{lo}+1=t_{\min}\cdot m\le k\,m$ candidate times (recall $t_{\min}\le k$), and every
+iteration at least halves it, there are at most $\lceil\log_2(km)\rceil+1$ iterations. Each
+iteration is dominated by its single call to \textit{MaxTrips}, i.e.\ $\Theta(n)$; the rest is
+$\Oh(1)$. Hence the worst-case running time is
+\[
+\Theta(n)+\Oh\bigl(n\log(km)\bigr)=\Oh\bigl(n\log(km)\bigr)=\Oh\bigl(n(\log k+\log m)\bigr).
+\]
+\end{document}
